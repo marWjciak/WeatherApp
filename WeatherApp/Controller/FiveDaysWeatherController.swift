@@ -19,9 +19,7 @@ class FiveDaysWeatherController: UIViewController {
         
         weatherTableView.dataSource = self
         weatherTableView.register(UINib(nibName: "WeatherCell", bundle: nil), forCellReuseIdentifier: "WeatherReusableCell")
-        
     }
-    
 }
 
 extension FiveDaysWeatherController: UITableViewDataSource {

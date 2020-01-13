@@ -42,7 +42,6 @@ struct WeatherManager {
         let data = JSON(weatherData)
         
         let cityNameValue = data["city"]["name"].stringValue
-        UserDefaults.standard.set(cityNameValue, forKey: "cityName")
         
         var dayForecast: [WeatherModel.DayForecast] = []
         data["list"].arrayValue.forEach { (day) in
