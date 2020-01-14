@@ -9,7 +9,6 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
-import CoreLocation
 
 protocol WeatherManagerDelegate {
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel)
@@ -25,7 +24,7 @@ struct WeatherManager {
         performWeatherRequest(with: URL)
     }
     
-    func fetchWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
+    func fetchWeather(latitude: String, longitude: String) {
         let urlString = "\(rawURL)&lat=\(latitude)&lon=\(longitude)"
         performWeatherRequest(with: urlString)
     }
@@ -44,21 +43,20 @@ struct WeatherManager {
         let cityNameValue = data["city"]["name"].stringValue
         
         var dayForecast: [WeatherModel.DayForecast] = []
+        
         data["list"].arrayValue.forEach { (day) in
             let temp = day["main"]["temp"].intValue
             let condId = day["weather"][0]["id"].intValue
             let description = day["weather"][0]["description"].stringValue
-            let date = day["dt_txt"].stringValue
+            let date = reformatDate(in: day["dt_txt"].stringValue)
             
-            let reformatedDate = reformatDate(with: date)
-            
-            dayForecast.append(WeatherModel.DayForecast(conditionID: condId, temp: temp, description: description, date: reformatedDate))
+            dayForecast.append(WeatherModel.DayForecast(conditionID: condId, temp: temp, description: description, date: date))
         }
         
         return WeatherModel(cityName: cityNameValue, dayForecast: dayForecast)
     }
     
-    func reformatDate(with value: String) -> String {
+    func reformatDate(in value: String) -> String {
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
 

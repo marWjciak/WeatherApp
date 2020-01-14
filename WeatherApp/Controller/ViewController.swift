@@ -15,7 +15,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var searchField: UITextField!
     @IBOutlet weak var tempField: UILabel!
     @IBOutlet weak var cityNameField: UILabel!
-    @IBOutlet weak var backView: UIView!
     @IBOutlet weak var todayIcon: UIImageView!
     
     // tomorrow
@@ -103,10 +102,7 @@ class ViewController: UIViewController {
             print("Error during decoding, \(error)")
         }
         
-        guard let checkedWeatherModel = loadedWeatherModel else {
-            return
-        }
-        updateGUI(checkedWeatherModel)
+        updateGUI()
     }
 }
 
@@ -131,7 +127,6 @@ extension ViewController: UITextFieldDelegate {
         if let cityName = textField.text {
             textField.text = ""
             
-            
             weatherManager.fetchWeatherData(for: cityName)
         } else {
             print("Error")
@@ -151,22 +146,27 @@ extension ViewController: WeatherManagerDelegate {
         loadedWeatherModel = weather
         saveToPropertyList()
         
-        updateGUI(loadedWeatherModel!)
+        updateGUI()
     }
     
-    fileprivate func updateGUI(_ weather: WeatherModel) {
+    fileprivate func updateGUI() {
+        
+        guard let safeWeatherModel = loadedWeatherModel else {
+            return
+        }
+        
         DispatchQueue.main.async {
-            self.cityNameField.text = weather.cityName
-            self.tempField.text = String(weather.dayForecast[0].temp)
-            self.todayIcon.image = UIImage(systemName: weather.dayForecast[0].icon)
+            self.cityNameField.text = safeWeatherModel.cityName
+            self.tempField.text = String(safeWeatherModel.dayForecast[0].temp)
+            self.todayIcon.image = UIImage(systemName: safeWeatherModel.dayForecast[0].icon)
             
-            self.tomorowLabel.text = String(weather.dayForecast[7].date)
-            self.tomorrowTemp.text = String(weather.dayForecast[7].temp)
-            self.tomorrowIcon.image = UIImage(systemName: weather.dayForecast[7].icon)
+            self.tomorowLabel.text = String(safeWeatherModel.dayForecast[7].date)
+            self.tomorrowTemp.text = String(safeWeatherModel.dayForecast[7].temp)
+            self.tomorrowIcon.image = UIImage(systemName: safeWeatherModel.dayForecast[7].icon)
             
-            self.afterTomorrowLabel.text = String(weather.dayForecast[15].date)
-            self.afterTomorrowTemp.text = String(weather.dayForecast[15].temp)
-            self.afterTomorrowIcon.image = UIImage(systemName: weather.dayForecast[15].icon)
+            self.afterTomorrowLabel.text = String(safeWeatherModel.dayForecast[15].date)
+            self.afterTomorrowTemp.text = String(safeWeatherModel.dayForecast[15].temp)
+            self.afterTomorrowIcon.image = UIImage(systemName: safeWeatherModel.dayForecast[15].icon)
         }
     }
 }
@@ -177,8 +177,8 @@ extension ViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             locationManager.stopUpdatingLocation()
-            let lat = location.coordinate.latitude
-            let lon = location.coordinate.longitude
+            let lat = String(location.coordinate.latitude)
+            let lon = String(location.coordinate.longitude)
             weatherManager.fetchWeather(latitude: lat, longitude: lon)
         }
     }
