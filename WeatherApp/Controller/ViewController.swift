@@ -116,21 +116,15 @@ extension ViewController: UITextFieldDelegate {
         return true
     }
     
-    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if textField.text != "" {
-            return true
-        } else {
-            return false
-        }
-    }
-    
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if let cityName = textField.text {
-            textField.text = ""
-            
-            weatherManager.fetchWeatherData(for: cityName)
-        } else {
+        guard let cityName = textField.text else {
             print("Error")
+            return
+        }
+        
+        if cityName != "" {
+            textField.text = ""
+            weatherManager.fetchWeatherData(for: cityName)
         }
     }
 }
