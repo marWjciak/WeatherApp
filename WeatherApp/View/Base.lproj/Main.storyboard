@@ -246,7 +246,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="sOi-9p-8nR">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="692"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="prototypeCell" id="4U3-pe-eIx">
                                         <rect key="frame" x="0.0" y="28" width="414" height="43.666667938232422"/>
@@ -260,12 +260,13 @@
                                 </prototypes>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.4397089481" green="0.78461295369999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="wNb-Wf-Xs2" firstAttribute="trailing" secondItem="sOi-9p-8nR" secondAttribute="trailing" id="V8G-Ia-B2k"/>
                             <constraint firstItem="sOi-9p-8nR" firstAttribute="leading" secondItem="wNb-Wf-Xs2" secondAttribute="leading" id="d6y-ay-BWi"/>
                             <constraint firstItem="sOi-9p-8nR" firstAttribute="top" secondItem="wNb-Wf-Xs2" secondAttribute="top" id="eMF-Bc-lCI"/>
-                            <constraint firstItem="wNb-Wf-Xs2" firstAttribute="bottom" secondItem="sOi-9p-8nR" secondAttribute="bottom" id="oZD-LA-m0w"/>
+                            <constraint firstAttribute="bottom" secondItem="sOi-9p-8nR" secondAttribute="bottom" id="nc8-bn-Fnc"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wNb-Wf-Xs2"/>
                     </view>
@@ -288,7 +289,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" red="0.098227427310000004" green="0.4578531851" blue="0.58809882609999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <color key="barTintColor" red="0.6816025376" green="0.90958708519999998" blue="0.9997245669" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" red="0.4397089481" green="0.78461295369999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <textAttributes key="largeTitleTextAttributes">
                             <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                         </textAttributes>

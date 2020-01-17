@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class FiveDaysWeatherController: UIViewController {
+class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var forecasts: WeatherModel?
     
     @IBOutlet weak var weatherTableView: UITableView!
@@ -17,12 +17,12 @@ class FiveDaysWeatherController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        weatherTableView.estimatedRowHeight = 80.0
         weatherTableView.dataSource = self
+        weatherTableView.delegate = self
         weatherTableView.register(UINib(nibName: "WeatherCell", bundle: nil), forCellReuseIdentifier: "WeatherReusableCell")
     }
-}
 
-extension FiveDaysWeatherController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let forecastCount = forecasts?.dayForecast.count {
             return forecastCount
@@ -41,7 +41,11 @@ extension FiveDaysWeatherController: UITableViewDataSource {
             cell.weatherTemp.text = String(forecastData?.temp ?? 0)
             cell.weatherDescription.text = forecastData?.description ?? ""
         }
-        
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return  80.0
+    }
+    
 }
