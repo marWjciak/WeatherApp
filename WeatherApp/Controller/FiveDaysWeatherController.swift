@@ -38,10 +38,11 @@ class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITabl
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherReusableCell", for: indexPath) as! WeatherCell
         
         DispatchQueue.main.async {
-            cell.weatherDate.text = forecastData?.date
             cell.weatherIcon.image = UIImage(systemName: forecastData?.icon ?? "")
             cell.weatherTemp.text = String(forecastData?.temp ?? 0)
             cell.weatherDescription.text = forecastData?.description ?? ""
+            cell.weatherDate.text = forecastData?.date
+            cell.weatherTime.text = forecastData?.time
         }
         return cell
     }

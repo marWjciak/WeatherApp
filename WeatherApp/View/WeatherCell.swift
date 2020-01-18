@@ -14,6 +14,7 @@ class WeatherCell: UITableViewCell {
     @IBOutlet weak var weatherDescription: UILabel!
     @IBOutlet weak var weatherTemp: UILabel!
     @IBOutlet weak var weatherDate: UILabel!
+    @IBOutlet weak var weatherTime: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

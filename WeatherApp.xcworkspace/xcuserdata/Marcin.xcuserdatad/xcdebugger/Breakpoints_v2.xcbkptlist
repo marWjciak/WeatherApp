@@ -16,7 +16,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "36"
             endingLineNumber = "36"
-            landmarkName = "performWeatherRequest(with:fromLocation:cityName:)"
+            landmarkName = "performWeatherRequest(with:fromLocation:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -32,7 +32,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "38"
             endingLineNumber = "38"
-            landmarkName = "performWeatherRequest(with:fromLocation:cityName:)"
+            landmarkName = "performWeatherRequest(with:fromLocation:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

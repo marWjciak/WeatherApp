@@ -18,6 +18,7 @@ struct WeatherModel: Codable {
         let temp: Int
         let description: String
         let date: String
+        let time: String
         
         var icon: String {
             switch conditionID {

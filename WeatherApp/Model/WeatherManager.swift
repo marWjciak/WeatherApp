@@ -60,9 +60,11 @@ struct WeatherManager {
             let temp = day["main"]["temp"].intValue
             let condId = day["weather"][0]["id"].intValue
             let description = day["weather"][0]["description"].stringValue
-            let date = reformatDate(in: day["dt_txt"].stringValue)
+            let dateTime = day["dt_txt"].stringValue.split(separator: " ")
+            let date = reformatDate(in: String(dateTime[0]))
+            let time = reformatTime(in: String(dateTime[1]))
             
-            dayForecast.append(WeatherModel.DayForecast(conditionID: condId, temp: temp, description: description, date: date))
+            dayForecast.append(WeatherModel.DayForecast(conditionID: condId, temp: temp, description: description, date: date, time: time))
         }
         
         return WeatherModel(cityName: cityNameValue, dayForecast: dayForecast, fromLocation: false)
@@ -70,7 +72,7 @@ struct WeatherManager {
     
     func reformatDate(in value: String) -> String {
         let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatterGet.dateFormat = "yyyy-MM-dd"
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E, d MMM"
@@ -78,5 +80,17 @@ struct WeatherManager {
         let date: Date? = dateFormatterGet.date(from: value)
         
         return dateFormatter.string(from: date!)
+    }
+    
+    func reformatTime(in value: String) -> String {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "HH:mm:ss"
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+
+        let timeFromDate: Date? = dateFormatterGet.date(from: value)
+        
+        return dateFormatter.string(from: timeFromDate!)
     }
 }
