@@ -21,18 +21,20 @@ struct WeatherManager {
     func fetchWeatherData(for city: String) {
         let URL = rawURL + "&q=\(city)"
         
-        performWeatherRequest(with: URL)
+        performWeatherRequest(with: URL, fromLocation: false)
     }
     
     func fetchWeather(latitude: String, longitude: String) {
         let urlString = "\(rawURL)&lat=\(latitude)&lon=\(longitude)"
-        performWeatherRequest(with: urlString)
+        performWeatherRequest(with: urlString, fromLocation: true)
     }
     
-    func performWeatherRequest(with url: String) {
+    func performWeatherRequest(with url: String, fromLocation: Bool) {
         Alamofire.request(url).response { (responseData) in
             if let weatherData = responseData.data {
-                self.delegate?.weatherDataDidUpdate(self, weather: self.parseJSON(with: weatherData))
+                var weatherModel = self.parseJSON(with: weatherData)
+                weatherModel.fromLocation = fromLocation
+                self.delegate?.weatherDataDidUpdate(self, weather: weatherModel)
             }
         }
     }
@@ -53,7 +55,7 @@ struct WeatherManager {
             dayForecast.append(WeatherModel.DayForecast(conditionID: condId, temp: temp, description: description, date: date))
         }
         
-        return WeatherModel(cityName: cityNameValue, dayForecast: dayForecast)
+        return WeatherModel(cityName: cityNameValue, dayForecast: dayForecast, fromLocation: false)
     }
     
     func reformatDate(in value: String) -> String {

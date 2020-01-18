@@ -12,14 +12,14 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="692"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="uDb-rq-IIW" userLabel="Background Image">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="692"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="B4G-8W-Bz0">
-                                <rect key="frame" x="20" y="0.0" width="374" height="692"/>
+                                <rect key="frame" x="20" y="0.0" width="374" height="736"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="QQ5-XU-Ja5">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="34"/>
@@ -70,27 +70,27 @@
                                         </constraints>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8bE-xM-Ydn" userLabel="Today temp stack">
-                                        <rect key="frame" x="88.000000000000014" y="265" width="198.33333333333337" height="163"/>
+                                        <rect key="frame" x="88.000000000000014" y="265" width="198.33333333333337" height="207"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" text="21" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wcU-mC-FTl" userLabel="Temperature Label">
-                                                <rect key="frame" x="0.0" y="0.0" width="92.666666666666671" height="163"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="92.666666666666671" height="207"/>
                                                 <fontDescription key="fontDescription" type="system" weight="black" pointSize="80"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="°" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f9r-qA-PdY" userLabel="Temperature Label">
-                                                <rect key="frame" x="92.666666666666657" y="0.0" width="38.666666666666657" height="163"/>
+                                                <rect key="frame" x="92.666666666666657" y="0.0" width="38.666666666666657" height="207"/>
                                                 <fontDescription key="fontDescription" type="system" weight="light" pointSize="100"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="C" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d72-wT-oud" userLabel="Temperature Label">
-                                                <rect key="frame" x="131.33333333333334" y="0.0" width="67" height="163"/>
+                                                <rect key="frame" x="131.33333333333334" y="0.0" width="67" height="207"/>
                                                 <fontDescription key="fontDescription" type="system" weight="light" pointSize="100"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gwf-tN-XPl">
-                                        <rect key="frame" x="40" y="433" width="294" height="40"/>
+                                        <rect key="frame" x="40" y="477" width="294" height="40"/>
                                         <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="OnG-zZ-5X9"/>
@@ -110,7 +110,7 @@
                                         </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="djV-UP-Usn">
-                                        <rect key="frame" x="20" y="478" width="334" height="214"/>
+                                        <rect key="frame" x="20" y="522" width="334" height="214"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="AqA-TI-fPN">
                                                 <rect key="frame" x="0.0" y="0.0" width="167" height="214"/>
@@ -229,12 +229,11 @@
                         <outlet property="tomorowLabel" destination="vHf-kA-s72" id="dda-uq-eVD"/>
                         <outlet property="tomorrowIcon" destination="wZq-sL-QIE" id="j9g-4D-A0U"/>
                         <outlet property="tomorrowTemp" destination="uWE-x1-QL6" id="sak-dN-Pzv"/>
-                        <segue destination="Kv7-W6-eV0" kind="show" identifier="MainToForecast" id="Njo-5T-i76"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1039.1304347826087" y="138.58695652173915"/>
+            <point key="canvasLocation" x="1013" y="-49"/>
         </scene>
         <!--Five Days Weather-->
         <scene sceneID="M7y-fm-lXE">
@@ -277,7 +276,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WDm-M3-Oeh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1873.913043478261" y="138.58695652173915"/>
+            <point key="canvasLocation" x="2170" y="805"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="dQs-BC-SBU">
@@ -296,12 +295,40 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="SZe-Yf-YPq"/>
+                        <segue destination="sN7-Y8-PO1" kind="relationship" relationship="rootViewController" id="RqE-7N-2P0"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bg9-46-YD4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="131.8840579710145" y="138.58695652173915"/>
+            <point key="canvasLocation" x="-71" y="805"/>
+        </scene>
+        <!--Location Weather View Controller-->
+        <scene sceneID="DuH-kD-f4N">
+            <objects>
+                <tableViewController id="sN7-Y8-PO1" customClass="LocationWeatherViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="rAb-1h-mu2">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="692"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.4397089481" green="0.78461295369999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <connections>
+                            <outlet property="dataSource" destination="sN7-Y8-PO1" id="66b-e3-Xkl"/>
+                            <outlet property="delegate" destination="sN7-Y8-PO1" id="elE-e0-KU6"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="JtS-Vc-azC">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="F3m-Wk-B6E">
+                            <connections>
+                                <action selector="addLocationPressed:" destination="sN7-Y8-PO1" id="1V3-7r-bRT"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="Kv7-W6-eV0" kind="show" id="T0V-pz-a0o"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d3E-pZ-qR1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1012" y="805"/>
         </scene>
     </scenes>
     <resources>

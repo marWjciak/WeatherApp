@@ -11,6 +11,7 @@ import Foundation
 struct WeatherModel: Codable {
     let cityName: String
     let dayForecast: [DayForecast]
+    var fromLocation: Bool
     
     struct DayForecast: Codable {
         let conditionID: Int

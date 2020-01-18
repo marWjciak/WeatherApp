@@ -10,6 +10,12 @@ import UIKit
 
 class LocationWeatherCell: UITableViewCell {
 
+    @IBOutlet weak var weatherImage: UIImageView!
+    @IBOutlet weak var currentTemp: UILabel!
+    @IBOutlet weak var cityName: UILabel!
+    @IBOutlet weak var weatherDescription: UILabel!
+    @IBOutlet weak var isFromLocationImage: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
