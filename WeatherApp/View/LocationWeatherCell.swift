@@ -11,6 +11,7 @@ import SwipeCellKit
 
 class LocationWeatherCell: SwipeTableViewCell {
 
+
     @IBOutlet weak var weatherImage: UIImageView!
     @IBOutlet weak var currentTemp: UILabel!
     @IBOutlet weak var cityName: UILabel!

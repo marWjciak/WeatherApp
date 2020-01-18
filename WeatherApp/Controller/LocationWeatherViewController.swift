@@ -11,6 +11,7 @@ import CoreLocation
 import SwipeCellKit
 
 class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate {
+
     
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
@@ -19,6 +20,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     var userLocations = [String]()
     var weatherData = [WeatherModel]()
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,10 +33,10 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         locationManager.delegate = self
         locationManager.requestLocation()
         
-        
         loadUserData()
     }
     
+
     //MARK: - Add User Location
     
     @IBAction func addLocationPressed(_ sender: UIBarButtonItem) {
@@ -62,6 +64,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             
                 self.weatherManager.fetchWeatherData(for: locationNameString)
             }
+
         }
         
         alert.addAction(addUserLocation)
@@ -122,7 +125,9 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "LocationWeatherCell", for: indexPath) as! LocationWeatherCell
+
         cell.delegate = self
+
         let cellRow = self.weatherData[indexPath.row]
         
         DispatchQueue.main.async {
@@ -132,7 +137,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             cell.weatherDescription.text = cellRow.dayForecast[0].description
             cell.isFromLocationImage.isHidden = !cellRow.fromLocation
         }
-        
+
         return cell
     }
     
@@ -150,6 +155,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         if let indexPath = tableView.indexPathForSelectedRow {
             destinationVC.forecasts = weatherData[indexPath.row]
         }
+
     }
     
     //MARK: - SwipeTableViewCellDelegate
