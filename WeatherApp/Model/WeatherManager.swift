@@ -19,14 +19,25 @@ struct WeatherManager {
     var delegate: WeatherManagerDelegate?
     
     func fetchWeatherData(for city: String) {
-        let URL = rawURL + "&q=\(city)"
+        
+        let cityNameForRequest = prepareNameToRequest(for: city)
+        
+        let URL = rawURL + "&q=\(cityNameForRequest)"
         
         performWeatherRequest(with: URL, fromLocation: false)
     }
     
-    func fetchWeather(latitude: String, longitude: String) {
+    func fetchWeatherData(latitude: String, longitude: String) {
         let urlString = "\(rawURL)&lat=\(latitude)&lon=\(longitude)"
         performWeatherRequest(with: urlString, fromLocation: true)
+    }
+    
+    fileprivate func prepareNameToRequest(for cityName: String) -> String {
+        
+        let removedSpaces = cityName.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")
+        let removedDiacritics = removedSpaces.lowercased().folding(options: .diacriticInsensitive, locale: .current).replacingOccurrences(of: "ł", with: "l")
+        
+        return removedDiacritics
     }
     
     func performWeatherRequest(with url: String, fromLocation: Bool) {

@@ -81,7 +81,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         let lat = String(location.coordinate.latitude)
         let lon = String(location.coordinate.longitude)
         
-        weatherManager.fetchWeather(latitude: lat, longitude: lon)
+        weatherManager.fetchWeatherData(latitude: lat, longitude: lon)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
