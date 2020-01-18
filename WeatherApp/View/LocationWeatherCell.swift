@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import SwipeCellKit
 
-class LocationWeatherCell: UITableViewCell {
+class LocationWeatherCell: SwipeTableViewCell {
+
 
     @IBOutlet weak var weatherImage: UIImageView!
     @IBOutlet weak var currentTemp: UILabel!

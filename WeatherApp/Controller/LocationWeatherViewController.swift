@@ -8,8 +8,10 @@
 
 import UIKit
 import CoreLocation
+import SwipeCellKit
 
-class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate {
+class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate {
+
     
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
@@ -18,11 +20,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     var userLocations = [String]()
     var weatherData = [WeatherModel]()
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-        
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,25 +33,10 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         locationManager.delegate = self
         locationManager.requestLocation()
         
-        if userLocations.count == 0 {
-            userLocations = userDefaults.stringArray(forKey: "UserLocations") ?? []
-        }
-        print(userLocations)
-        
-        for location in userLocations {
-            weatherManager.fetchWeatherData(for: location)
-        }
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
+        loadUserData()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        
-    }
-    
-    
+
     //MARK: - Add User Location
     
     @IBAction func addLocationPressed(_ sender: UIBarButtonItem) {
@@ -78,12 +61,10 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
             
             if locationNameString != "" {
-                self.userLocations.append(locationNameString)
-                self.userDefaults.set(self.userLocations, forKey: "UserLocations")
             
                 self.weatherManager.fetchWeatherData(for: locationNameString)
             }
-            
+
         }
         
         alert.addAction(addUserLocation)
@@ -107,26 +88,32 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         print("Cannot get current location, \(error)")
     }
     
-    
     //MARK: - Weather Manager Delegate
     
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel) {
         if weather.fromLocation == true {
             weatherData.insert(weather, at: 0)
         } else {
-            weatherData.append(weather)
+            if !userLocations.contains(weather.cityName) {
+                userLocations.append(weather.cityName)
+                userDefaults.set(userLocations, forKey: "UserLocations")
+            }
+            
+            let containsWeatherData = weatherData.contains { (element) -> Bool in
+                if element.cityName == weather.cityName {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            
+            if !containsWeatherData {
+                weatherData.append(weather)
+            }
         }
         
         self.tableView.reloadData()
     }
-    
-    func weatherDataDidFailUpdate(_: WeatherManager, fromLocation: Bool) {
-        if !fromLocation {
-            userLocations.removeLast()
-            userDefaults.set(userLocations, forKey: "UserLocations")
-        }
-    }
-    
     
     // MARK: - Table view data source
     
@@ -138,6 +125,9 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "LocationWeatherCell", for: indexPath) as! LocationWeatherCell
+
+        cell.delegate = self
+
         let cellRow = self.weatherData[indexPath.row]
         
         DispatchQueue.main.async {
@@ -147,8 +137,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             cell.weatherDescription.text = cellRow.dayForecast[0].description
             cell.isFromLocationImage.isHidden = !cellRow.fromLocation
         }
-        
-        
+
         return cell
     }
     
@@ -166,7 +155,50 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         if let indexPath = tableView.indexPathForSelectedRow {
             destinationVC.forecasts = weatherData[indexPath.row]
         }
-        
+
     }
     
+    //MARK: - SwipeTableViewCellDelegate
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else { return nil }
+
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+            
+            let cellToRemove = self.weatherData[indexPath.row]
+            
+            self.removeSelectedCell(cellToRemove, indexPath)
+        }
+
+        // customize the action appearance
+        deleteAction.image = UIImage(systemName: "trash")
+
+        return [deleteAction]
+    }
+    
+    func removeSelectedCell(_ cellToRemove: WeatherModel, _ indexPath: IndexPath) {
+        self.userLocations.removeAll { (name) -> Bool in
+            name == cellToRemove.cityName
+        }
+        
+        self.userDefaults.set(self.userLocations, forKey: "UserLocations")
+        self.weatherData.remove(at: indexPath.row)
+        
+        tableView.reloadData()
+    }
+    
+    //MARK: - User Data
+    
+    func loadUserData() {
+        
+        if userLocations.count == 0 {
+            userLocations = userDefaults.stringArray(forKey: "UserLocations") ?? []
+        }
+        
+        print(userLocations)
+        
+        for location in userLocations {
+            weatherManager.fetchWeatherData(for: location)
+        }
+    }
 }
