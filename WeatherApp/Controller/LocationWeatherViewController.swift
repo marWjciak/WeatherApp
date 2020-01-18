@@ -142,6 +142,12 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if  UIDevice.current.orientation.isPortrait {
+            return 200.0
+        } else if  UIDevice.current.orientation.isLandscape {
+            return 115.0
+        }
+        
         return 200.0
     }
     

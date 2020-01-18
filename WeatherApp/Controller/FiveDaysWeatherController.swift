@@ -48,7 +48,13 @@ class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return  80.0
+        if  UIDevice.current.orientation.isPortrait {
+            return 100.0
+        } else if  UIDevice.current.orientation.isLandscape {
+            return 85.0
+        }
+        
+        return 100.0
     }
     
 }
