@@ -12,6 +12,7 @@ import SwiftyJSON
 
 protocol WeatherManagerDelegate {
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel)
+    func weatherDataDidFailUpdate(_: WeatherManager, fromLocation: Bool)
 }
 
 struct WeatherManager {
@@ -32,15 +33,24 @@ struct WeatherManager {
     func performWeatherRequest(with url: String, fromLocation: Bool) {
         Alamofire.request(url).response { (responseData) in
             if let weatherData = responseData.data {
-                var weatherModel = self.parseJSON(with: weatherData)
+                guard var weatherModel = self.parseJSON(with: weatherData) else {
+                    
+                    self.delegate?.weatherDataDidFailUpdate(self, fromLocation: fromLocation)
+                    return
+                }
+                
                 weatherModel.fromLocation = fromLocation
                 self.delegate?.weatherDataDidUpdate(self, weather: weatherModel)
             }
         }
     }
     
-    func parseJSON(with weatherData: Data) -> WeatherModel {
+    func parseJSON(with weatherData: Data) -> WeatherModel? {
         let data = JSON(weatherData)
+        
+        if data["cod"].stringValue != "200" {
+            return nil
+        }
         
         let cityNameValue = data["city"]["name"].stringValue
         

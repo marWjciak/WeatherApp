@@ -21,6 +21,8 @@ class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITabl
         weatherTableView.dataSource = self
         weatherTableView.delegate = self
         weatherTableView.register(UINib(nibName: "WeatherCell", bundle: nil), forCellReuseIdentifier: "WeatherReusableCell")
+        
+        navigationItem.title = forecasts?.cityName
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
