@@ -34,7 +34,10 @@ struct WeatherManager {
     
     fileprivate func prepareNameToRequest(for cityName: String) -> String {
         
-        return cityName.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")
+        let removedSpaces = cityName.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")
+        let removedDiacritics = removedSpaces.lowercased().folding(options: .diacriticInsensitive, locale: .current).replacingOccurrences(of: "ł", with: "l")
+        
+        return removedDiacritics
     }
     
     func performWeatherRequest(with url: String, fromLocation: Bool) {
