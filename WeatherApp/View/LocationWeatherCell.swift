@@ -1,20 +1,20 @@
 //
-//  WeatherCell.swift
+//  LocationWeatherCell.swift
 //  WeatherApp
 //
-//  Created by Marcin Wójciak on 28/12/2019.
-//  Copyright © 2019 Marcin Wójciak. All rights reserved.
+//  Created by Marcin Wójciak on 17/01/2020.
+//  Copyright © 2020 Marcin Wójciak. All rights reserved.
 //
 
 import UIKit
 
-class WeatherCell: UITableViewCell {
+class LocationWeatherCell: UITableViewCell {
 
-    @IBOutlet weak var weatherIcon: UIImageView!
+    @IBOutlet weak var weatherImage: UIImageView!
+    @IBOutlet weak var currentTemp: UILabel!
+    @IBOutlet weak var cityName: UILabel!
     @IBOutlet weak var weatherDescription: UILabel!
-    @IBOutlet weak var weatherTemp: UILabel!
-    @IBOutlet weak var weatherDate: UILabel!
-    @IBOutlet weak var weatherTime: UILabel!
+    @IBOutlet weak var isFromLocationImage: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
