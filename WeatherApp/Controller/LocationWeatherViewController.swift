@@ -11,7 +11,6 @@ import CoreLocation
 import SwipeCellKit
 
 class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate {
-
     
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
@@ -20,7 +19,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     var userLocations = [String]()
     var weatherData = [WeatherModel]()
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,7 +34,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         loadUserData()
     }
     
-
     //MARK: - Add User Location
     
     @IBAction func addLocationPressed(_ sender: UIBarButtonItem) {
@@ -61,10 +58,10 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
             
             if locationNameString != "" {
-            
+                
                 self.weatherManager.fetchWeatherData(for: locationNameString)
             }
-
+            
         }
         
         alert.addAction(addUserLocation)
@@ -125,9 +122,9 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "LocationWeatherCell", for: indexPath) as! LocationWeatherCell
-
+        
         cell.delegate = self
-
+        
         let cellRow = self.weatherData[indexPath.row]
         
         DispatchQueue.main.async {
@@ -137,18 +134,13 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             cell.weatherDescription.text = cellRow.dayForecast[0].description
             cell.isFromLocationImage.isHidden = !cellRow.fromLocation
         }
-
+        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if  UIDevice.current.orientation.isPortrait {
-            return 200.0
-        } else if  UIDevice.current.orientation.isLandscape {
-            return 115.0
-        }
-        
-        return 200.0
+
+        return tableView.bounds.size.height / 4
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -161,25 +153,47 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         if let indexPath = tableView.indexPathForSelectedRow {
             destinationVC.forecasts = weatherData[indexPath.row]
         }
-
+        
     }
     
     //MARK: - SwipeTableViewCellDelegate
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        guard orientation == .right else { return nil }
-
+//        guard orientation == .right else { return nil }
+        
         let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
             
             let cellToRemove = self.weatherData[indexPath.row]
             
             self.removeSelectedCell(cellToRemove, indexPath)
         }
-
+        
+        let reloadLocationAction = SwipeAction(style: .default, title: "Refresh") { (action, indexPath) in
+            
+            self.locationManager.requestLocation()
+        }
+        
         // customize the action appearance
         deleteAction.image = UIImage(systemName: "trash")
-
-        return [deleteAction]
+        reloadLocationAction.image = UIImage(systemName: "arrow.uturn.right")
+        reloadLocationAction.backgroundColor = .blue
+        
+        let rightActions = [deleteAction]
+        let leftActions = [reloadLocationAction]
+        
+        return orientation == .right ? rightActions : leftActions
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        
+        if orientation == .right {
+            options.expansionStyle = .destructive
+        } else {
+            options.expansionStyle = .destructive(automaticallyDelete: false)
+        }
+        
+        return options
     }
     
     func removeSelectedCell(_ cellToRemove: WeatherModel, _ indexPath: IndexPath) {
@@ -190,7 +204,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         self.userDefaults.set(self.userLocations, forKey: "UserLocations")
         self.weatherData.remove(at: indexPath.row)
         
-        tableView.reloadData()
     }
     
     //MARK: - User Data
