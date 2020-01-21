@@ -20,16 +20,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="475" height="80"/>
                         <color key="tintColor" red="0.4397089481" green="0.78461295369999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="21" textAlignment="right" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="QjZ-d7-rTC" userLabel="Temperature Label">
-                        <rect key="frame" x="120" y="10" width="40" height="60"/>
-                        <constraints>
-                            <constraint firstAttribute="width" secondItem="QjZ-d7-rTC" secondAttribute="height" multiplier="1:1.5" id="AIz-J9-NwE"/>
-                        </constraints>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="21" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="QjZ-d7-rTC" userLabel="Temperature Label">
+                        <rect key="frame" x="130" y="10" width="35.5" height="60"/>
                         <fontDescription key="fontDescription" type="system" weight="black" pointSize="30"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="749" text="°" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="4HY-FS-HI6" userLabel="Temperature Label">
-                        <rect key="frame" x="161" y="22" width="12" height="36"/>
+                        <rect key="frame" x="166.5" y="22" width="12" height="36"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="4HY-FS-HI6" secondAttribute="height" multiplier="1:3" id="mBl-lf-FCM"/>
                         </constraints>
@@ -37,7 +34,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="749" text="C" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="tM4-cM-bv8" userLabel="Temperature Label">
-                        <rect key="frame" x="173" y="21.5" width="20.5" height="37"/>
+                        <rect key="frame" x="178.5" y="21.5" width="20.5" height="37"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="tM4-cM-bv8" secondAttribute="height" multiplier="5:9" id="wew-MW-H7e"/>
                         </constraints>
@@ -82,7 +79,7 @@
                     <constraint firstAttribute="bottom" secondItem="qgO-iF-80P" secondAttribute="bottom" constant="10" id="U6M-pk-4VJ"/>
                     <constraint firstItem="tM4-cM-bv8" firstAttribute="leading" secondItem="4HY-FS-HI6" secondAttribute="trailing" id="WZT-iX-EWI"/>
                     <constraint firstItem="4HY-FS-HI6" firstAttribute="centerY" secondItem="QjZ-d7-rTC" secondAttribute="centerY" id="aNj-rp-y1D"/>
-                    <constraint firstItem="QjZ-d7-rTC" firstAttribute="leading" secondItem="qgO-iF-80P" secondAttribute="trailing" constant="50" id="aYY-a1-UCX"/>
+                    <constraint firstItem="QjZ-d7-rTC" firstAttribute="leading" secondItem="qgO-iF-80P" secondAttribute="trailing" constant="60" id="aYY-a1-UCX"/>
                     <constraint firstAttribute="bottom" secondItem="8b7-9U-aQF" secondAttribute="bottom" id="ajc-nP-j7N"/>
                     <constraint firstAttribute="bottom" secondItem="inB-tJ-lo1" secondAttribute="bottom" constant="5" id="dpw-i2-uM5"/>
                     <constraint firstItem="inB-tJ-lo1" firstAttribute="top" secondItem="2XT-g2-XRi" secondAttribute="bottom" constant="1" id="e5V-4N-2s3"/>
