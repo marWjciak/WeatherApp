@@ -15,12 +15,15 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
     var weatherManager = WeatherManager()
+    var addingData = false
     
     var userLocations = [String]()
-    var weatherData = [WeatherModel]()
+    var weatherData = [WeatherModel(cityName: "empty", dayForecast: [], fromLocation: true)]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.rowHeight = 0
         
         tableView.register(UINib(nibName: "LocationWeatherCell", bundle: nil), forCellReuseIdentifier: "LocationWeatherCell")
         
@@ -37,6 +40,8 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     //MARK: - Add User Location
     
     @IBAction func addLocationPressed(_ sender: UIBarButtonItem) {
+        
+        addingData = true
         
         var locationName = UITextField()
         
@@ -89,7 +94,8 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel) {
         if weather.fromLocation == true {
-            weatherData.insert(weather, at: 0)
+//            weatherData.insert(weather, at: 0)
+            weatherData[0] = weather
         } else {
             if !userLocations.contains(weather.cityName) {
                 userLocations.append(weather.cityName)
@@ -106,6 +112,14 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             
             if !containsWeatherData {
                 weatherData.append(weather)
+                
+                if addingData {
+                    DispatchQueue.main.async {
+                        let indexPath = IndexPath(row: self.weatherData.count - 1, section: 0)
+                        self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                    }
+                    addingData = false
+                }
             }
         }
         
@@ -127,12 +141,15 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         
         let cellRow = self.weatherData[indexPath.row]
         
-        DispatchQueue.main.async {
-            cell.weatherImage.image = UIImage(systemName: cellRow.dayForecast[0].icon)
-            cell.currentTemp.text = String(cellRow.dayForecast[0].temp)
-            cell.cityName.text = cellRow.cityName
-            cell.weatherDescription.text = cellRow.dayForecast[0].description
-            cell.isFromLocationImage.isHidden = !cellRow.fromLocation
+        if !cellRow.dayForecast.isEmpty {
+        
+            DispatchQueue.main.async {
+                cell.weatherImage.image = UIImage(systemName: cellRow.dayForecast[0].icon)
+                cell.currentTemp.text = String(cellRow.dayForecast[0].temp)
+                cell.cityName.text = cellRow.cityName
+                cell.weatherDescription.text = cellRow.dayForecast[0].description
+                cell.isFromLocationImage.isHidden = !cellRow.fromLocation
+            }
         }
         
         return cell
@@ -140,7 +157,11 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        return tableView.bounds.size.height / 4
+        if indexPath.row == 0 && weatherData[indexPath.row].dayForecast.isEmpty {
+            return 0
+        } else {
+            return tableView.bounds.size.height / 4
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -160,28 +181,37 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
 //        guard orientation == .right else { return nil }
+        let returnedAction: SwipeAction
         
-        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+        if indexPath.row == 0 {
+            guard orientation == .left else { return nil }
             
-            let cellToRemove = self.weatherData[indexPath.row]
+            let reloadLocationAction = SwipeAction(style: .default, title: "Refresh") { (action, indexPath) in
+                
+                self.locationManager.requestLocation()
+            }
             
-            self.removeSelectedCell(cellToRemove, indexPath)
+            reloadLocationAction.image = UIImage(systemName: "arrow.uturn.right")
+            reloadLocationAction.backgroundColor = .blue
+            
+            returnedAction = reloadLocationAction
+            
+        } else {
+            guard orientation == .right else { return nil }
+            
+            let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+                
+                let cellToRemove = self.weatherData[indexPath.row]
+                
+                self.removeSelectedCell(cellToRemove, indexPath)
+            }
+            
+            deleteAction.image = UIImage(systemName: "trash")
+            
+            returnedAction = deleteAction
         }
         
-        let reloadLocationAction = SwipeAction(style: .default, title: "Refresh") { (action, indexPath) in
-            
-            self.locationManager.requestLocation()
-        }
-        
-        // customize the action appearance
-        deleteAction.image = UIImage(systemName: "trash")
-        reloadLocationAction.image = UIImage(systemName: "arrow.uturn.right")
-        reloadLocationAction.backgroundColor = .blue
-        
-        let rightActions = [deleteAction]
-        let leftActions = [reloadLocationAction]
-        
-        return orientation == .right ? rightActions : leftActions
+        return [returnedAction]
     }
     
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
