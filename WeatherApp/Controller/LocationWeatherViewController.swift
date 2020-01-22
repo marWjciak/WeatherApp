@@ -19,6 +19,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     
     var userLocations = [String]()
     var weatherData = [WeatherModel(cityName: "empty", dayForecast: [], fromLocation: true)]
+    var locationWithIndexRow: [String: Int] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,7 +112,13 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
             
             if !containsWeatherData {
-                weatherData.append(weather)
+//                weatherData.append(weather)
+                if let cityIndex = locationWithIndexRow[weather.cityName] {
+                    weatherData.remove(at: cityIndex)
+                    weatherData.insert(weather, at: cityIndex)
+                } else {
+                    weatherData.append(weather)
+                }
                 
                 if addingData {
                     DispatchQueue.main.async {
@@ -157,7 +164,8 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        if indexPath.row == 0 && weatherData[indexPath.row].dayForecast.isEmpty {
+//        if (indexPath.row == 0 && weatherData[0].dayForecast.isEmpty) || weatherData[indexPath.row].dayForecast.isEmpty {
+        if weatherData[indexPath.row].dayForecast.isEmpty {
             return 0
         } else {
             return tableView.bounds.size.height / 4
@@ -188,6 +196,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             
             let reloadLocationAction = SwipeAction(style: .default, title: "Refresh") { (action, indexPath) in
                 
+                self.tableView.reloadRows(at: [indexPath], with: .left)
                 self.locationManager.requestLocation()
             }
             
@@ -240,11 +249,18 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     
     func loadUserData() {
         
-        if userLocations.count == 0 {
-            userLocations = userDefaults.stringArray(forKey: "UserLocations") ?? []
+        userLocations = userDefaults.stringArray(forKey: "UserLocations") ?? []
+        
+        weatherData = [WeatherModel](repeating: WeatherModel(cityName: "", dayForecast: [], fromLocation: false), count: userLocations.count + 1)
+        weatherData[0] = WeatherModel(cityName: "empty", dayForecast: [], fromLocation: true)
+        print(userLocations)
+        
+        
+        for i in 0..<userLocations.count {
+            locationWithIndexRow[userLocations[i]] = i + 1
         }
         
-        print(userLocations)
+        print(locationWithIndexRow)
         
         for location in userLocations {
             weatherManager.fetchWeatherData(for: location)
