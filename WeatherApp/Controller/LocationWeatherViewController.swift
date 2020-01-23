@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import SwipeCellKit
 
-class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate {
+class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate, UITableViewDragDelegate {
     
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
@@ -34,6 +34,10 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
         locationManager.delegate = self
         locationManager.requestLocation()
+        
+        // move cell
+        tableView.dragInteractionEnabled = true
+        tableView.dragDelegate = self
         
         loadUserData()
     }
@@ -98,10 +102,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 //            weatherData.insert(weather, at: 0)
             weatherData[0] = weather
         } else {
-            if !userLocations.contains(weather.cityName) {
-                userLocations.append(weather.cityName)
-                userDefaults.set(userLocations, forKey: "UserLocations")
-            }
             
             let containsWeatherData = weatherData.contains { (element) -> Bool in
                 if element.cityName == weather.cityName {
@@ -112,7 +112,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
             
             if !containsWeatherData {
-//                weatherData.append(weather)
                 if let cityIndex = locationWithIndexRow[weather.cityName] {
                     weatherData.remove(at: cityIndex)
                     weatherData.insert(weather, at: cityIndex)
@@ -127,6 +126,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                     }
                     addingData = false
                 }
+                saveUserData()
             }
         }
         
@@ -240,11 +240,29 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             name == cellToRemove.cityName
         }
         
-        self.userDefaults.set(self.userLocations, forKey: "UserLocations")
+//        self.userDefaults.set(self.userLocations, forKey: "UserLocations")
         self.weatherData.remove(at: indexPath.row)
+        saveUserData()
         
     }
     
+//MARK: - UITableViewDragDelegates
+    
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        if sourceIndexPath.row != 0 {
+            let item = weatherData[sourceIndexPath.row]
+            weatherData.remove(at: sourceIndexPath.row)
+            weatherData.insert(item, at: destinationIndexPath.row)
+            
+            saveUserData()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        
+        return [UIDragItem(itemProvider: NSItemProvider())]
+    }
+
     //MARK: - User Data
     
     func loadUserData() {
@@ -265,5 +283,15 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         for location in userLocations {
             weatherManager.fetchWeatherData(for: location)
         }
+    }
+    
+    func saveUserData() {
+        userLocations = []
+        
+        for i in 1..<weatherData.count {
+            userLocations.append(weatherData[i].cityName)
+        }
+        
+        userDefaults.set(userLocations, forKey: "UserLocations")
     }
 }
