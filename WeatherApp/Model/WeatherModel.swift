@@ -8,43 +8,71 @@
 
 import Foundation
 
-struct WeatherModel: Codable {
+struct WeatherModel {
     let cityName: String
     let dayForecast: [DayForecast]
-    var fromLocation: Bool
-    
-    struct DayForecast: Codable {
-        let conditionID: Int
-        let temp: Int
-        let description: String
-        let date: String
-        let time: String
-        
-        var icon: String {
-            switch conditionID {
-                case 200..<232:
-                    return "cloud.bolt"
-                case 300..<321:
-                    return "cloud.drizzle"
-                case 500, 501, 520, 521:
-                    return "cloud.rain"
-                case 511:
-                    return "snow"
-                case 502, 503, 504, 522, 531:
-                    return "cloud.heavyrain"
-                case 600..<622:
-                    return "cloud.snow"
-                case 700..<800:
-                    return "cloud.fog"
-                case 800:
-                    return "sun.max"
-                case 801:
-                    return "cloud.sun"
-                case 802...804:
-                    return "cloud"
-                default:
-                    return "icloud.slash"
-            }
+    let fromLocation: Bool
+
+    init(weatherResponse: WeatherResponse, fromLocation: Bool) {
+        self.cityName = weatherResponse.city.name
+        self.fromLocation = fromLocation
+        self.dayForecast = weatherResponse.dayForecasts.map { (forecast) -> DayForecast in
+            DayForecast(forecast: forecast)
+        }
+    }
+
+    init(cityName: String, dayForecast: [DayForecast], fromLocation: Bool) {
+        self.cityName = cityName
+        self.dayForecast = dayForecast
+        self.fromLocation = fromLocation
+    }
+}
+
+struct DayForecast: Codable {
+    let conditionID: Int
+    let temp: Int
+    let description: String
+    let date: String
+    let time: String
+
+    init(forecast: DayForecastResponse) {
+        temp = Int(forecast.main.temp)
+        conditionID = forecast.conditions[0].id
+        description = forecast.conditions[0].description
+
+        let dateFormatter = DateFormatter()
+
+        dateFormatter.dateFormat = "E, d MMM"
+        date = dateFormatter.string(from: forecast.date)
+
+        dateFormatter.dateFormat = "HH:mm"
+        time = dateFormatter.string(from: forecast.date)
+    }
+
+    var icon: String {
+        switch conditionID {
+            case 200..<232:
+                return "cloud.bolt"
+            case 300..<321:
+                return "cloud.drizzle"
+            case 500, 501, 520, 521:
+                return "cloud.rain"
+            case 511:
+                return "snow"
+            case 502, 503, 504, 522, 531:
+                return "cloud.heavyrain"
+            case 600..<622:
+                return "cloud.snow"
+            case 700..<800:
+                return "cloud.fog"
+            case 800:
+                return "sun.max"
+            case 801:
+                return "cloud.sun"
+            case 802...804:
+                return "cloud"
+            default:
+                return "icloud.slash"
         }
     }
 }

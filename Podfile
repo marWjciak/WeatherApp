@@ -7,7 +7,6 @@ target 'WeatherApp' do
 
   # Pods for WeatherApp
 pod 'Alamofire'
-pod 'SwiftyJSON'
 pod 'IQKeyboardManagerSwift'
 pod 'SwipeCellKit'
 
