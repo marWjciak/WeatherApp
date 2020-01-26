@@ -99,8 +99,9 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel) {
         if weather.fromLocation == true {
-//            weatherData.insert(weather, at: 0)
+
             weatherData[0] = weather
+
         } else {
             
             let containsWeatherData = weatherData.contains { (element) -> Bool in
@@ -149,7 +150,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         let cellRow = self.weatherData[indexPath.row]
         
         if !cellRow.dayForecast.isEmpty {
-        
+
             DispatchQueue.main.async {
                 cell.weatherImage.image = UIImage(systemName: cellRow.dayForecast[0].icon)
                 cell.currentTemp.text = String(cellRow.dayForecast[0].temp)
@@ -164,7 +165,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-//        if (indexPath.row == 0 && weatherData[0].dayForecast.isEmpty) || weatherData[indexPath.row].dayForecast.isEmpty {
         if weatherData[indexPath.row].dayForecast.isEmpty {
             return 0
         } else {
@@ -188,7 +188,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     //MARK: - SwipeTableViewCellDelegate
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-//        guard orientation == .right else { return nil }
         let returnedAction: SwipeAction
         
         if indexPath.row == 0 {
@@ -239,16 +238,17 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         self.userLocations.removeAll { (name) -> Bool in
             name == cellToRemove.cityName
         }
-        
-//        self.userDefaults.set(self.userLocations, forKey: "UserLocations")
+
         self.weatherData.remove(at: indexPath.row)
         saveUserData()
         
     }
     
-//MARK: - UITableViewDragDelegates
+    //MARK: - UITableViewDragDelegates
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+
+        
         if sourceIndexPath.row != 0 {
             let item = weatherData[sourceIndexPath.row]
             weatherData.remove(at: sourceIndexPath.row)
@@ -260,7 +260,15 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
-        return [UIDragItem(itemProvider: NSItemProvider())]
+        return indexPath.row != 0 ? [UIDragItem(itemProvider: NSItemProvider())] : []
+    }
+
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.row == 0 {
+            return false
+        }
+
+        return true
     }
 
     //MARK: - User Data
