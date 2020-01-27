@@ -19,6 +19,30 @@ struct WeatherModel: Codable {
         let description: String
         let date: String
         let time: String
+
+        var formattedDate: String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            guard let date: Date = dateFormatter.date(from: self.date) else {
+                return self.date
+            }
+
+            dateFormatter.dateFormat = "E, d MMM"
+
+            return dateFormatter.string(from: date)
+        }
+
+        var formattedTime: String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "HH:mm:ss"
+            guard let timeFromDate: Date = dateFormatter.date(from: self.time) else {
+                return self.time
+            }
+
+            dateFormatter.dateFormat = "HH:mm"
+
+            return dateFormatter.string(from: timeFromDate)
+        }
         
         var icon: String {
             switch conditionID {

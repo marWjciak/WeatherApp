@@ -32,7 +32,7 @@ struct WeatherManager {
         performWeatherRequest(with: urlString, fromLocation: true)
     }
     
-    fileprivate func prepareNameToRequest(for cityName: String) -> String {
+    private func prepareNameToRequest(for cityName: String) -> String {
         
         let removedSpaces = cityName.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")
         let removedDiacritics = removedSpaces.lowercased().folding(options: .diacriticInsensitive, locale: .current).replacingOccurrences(of: "ł", with: "l")
@@ -69,8 +69,8 @@ struct WeatherManager {
             let condId = day["weather"][0]["id"].intValue
             let description = day["weather"][0]["description"].stringValue
             let dateTime = day["dt_txt"].stringValue.split(separator: " ")
-            let date = reformatDate(in: String(dateTime[0]))
-            let time = reformatTime(in: String(dateTime[1]))
+            let date = String(dateTime[0])
+            let time = String(dateTime[1])
             
             dayForecast.append(WeatherModel.DayForecast(conditionID: condId, temp: temp, description: description, date: date, time: time))
         }
@@ -78,27 +78,23 @@ struct WeatherManager {
         return WeatherModel(cityName: cityNameValue, dayForecast: dayForecast, fromLocation: false)
     }
     
-    func reformatDate(in value: String) -> String {
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd"
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "E, d MMM"
-
-        let date: Date? = dateFormatterGet.date(from: value)
-        
-        return dateFormatter.string(from: date!)
-    }
+//    func reformatDate(in value: String) -> String {
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd"
+//        let date: Date? = dateFormatter.date(from: value)
+//
+//        dateFormatter.dateFormat = "E, d MMM"
+//        
+//        return dateFormatter.string(from: date!)
+//    }
     
-    func reformatTime(in value: String) -> String {
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "HH:mm:ss"
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
-
-        let timeFromDate: Date? = dateFormatterGet.date(from: value)
-        
-        return dateFormatter.string(from: timeFromDate!)
-    }
+//    func reformatTime(in value: String) -> String {
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "HH:mm:ss"
+//        let timeFromDate: Date? = dateFormatter.date(from: value)
+//
+//        dateFormatter.dateFormat = "HH:mm"
+//        
+//        return dateFormatter.string(from: timeFromDate!)
+//    }
 }
