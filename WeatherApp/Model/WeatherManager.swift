@@ -72,7 +72,7 @@ struct WeatherManager {
             let date = String(dateTime[0])
             let time = String(dateTime[1])
             
-            dayForecast.append(WeatherModel.DayForecast(conditionID: condId, temp: temp, description: description, date: date, time: time))
+            dayForecast.append(WeatherModel.DayForecast(conditionID: condId, temp: temp, description: description, _date: date, _time: time))
         }
         
         return WeatherModel(cityName: cityNameValue, dayForecast: dayForecast, fromLocation: false)

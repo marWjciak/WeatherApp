@@ -41,8 +41,8 @@ class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITabl
             cell.weatherIcon.image = UIImage(systemName: forecastData?.icon ?? "")
             cell.weatherTemp.text = String(forecastData?.temp ?? 0)
             cell.weatherDescription.text = forecastData?.description ?? ""
-            cell.weatherDate.text = forecastData?.formattedDate
-            cell.weatherTime.text = forecastData?.formattedTime
+            cell.weatherDate.text = forecastData?.date
+            cell.weatherTime.text = forecastData?.time
         }
         return cell
     }
