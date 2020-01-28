@@ -249,7 +249,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
 
         
-        if sourceIndexPath.row != 0 {
+        if destinationIndexPath.row != 0 {
             let item = weatherData[sourceIndexPath.row]
             weatherData.remove(at: sourceIndexPath.row)
             weatherData.insert(item, at: destinationIndexPath.row)
