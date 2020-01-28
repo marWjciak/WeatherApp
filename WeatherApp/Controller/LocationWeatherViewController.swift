@@ -255,6 +255,8 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             weatherData.insert(item, at: destinationIndexPath.row)
             
             saveUserData()
+        } else {
+            tableView.reloadData()
         }
     }
     
