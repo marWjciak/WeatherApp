@@ -43,7 +43,9 @@ struct WeatherManager {
     func performWeatherRequest(with url: String, fromLocation: Bool) {
         Alamofire.request(url).response { (responseData) in
             if let weatherData = responseData.data {
-                guard var weatherModel = self.parseJSON(with: weatherData) else {
+
+                let responseModel = WeatherResponse(data: weatherData)
+                guard var weatherModel = responseModel.parseJSON() else {
                     return
                 }
                 
@@ -51,30 +53,5 @@ struct WeatherManager {
                 self.delegate?.weatherDataDidUpdate(self, weather: weatherModel)
             }
         }
-    }
-    
-    func parseJSON(with weatherData: Data) -> WeatherModel? {
-        let data = JSON(weatherData)
-        
-        if data["cod"].stringValue != "200" {
-            return nil
-        }
-        
-        let cityNameValue = data["city"]["name"].stringValue
-        
-        var dayForecast: [WeatherModel.DayForecast] = []
-        
-        data["list"].arrayValue.forEach { (day) in
-            let temp = day["main"]["temp"].intValue
-            let condId = day["weather"][0]["id"].intValue
-            let description = day["weather"][0]["description"].stringValue
-            let dateTime = day["dt_txt"].stringValue.split(separator: " ")
-            let date = String(dateTime[0])
-            let time = String(dateTime[1])
-            
-            dayForecast.append(WeatherModel.DayForecast(conditionID: condId, temp: temp, description: description, date: date, time: time))
-        }
-        
-        return WeatherModel(cityName: cityNameValue, dayForecast: dayForecast, fromLocation: false)
     }
 }
