@@ -72,29 +72,9 @@ struct WeatherManager {
             let date = String(dateTime[0])
             let time = String(dateTime[1])
             
-            dayForecast.append(WeatherModel.DayForecast(conditionID: condId, temp: temp, description: description, _date: date, _time: time))
+            dayForecast.append(WeatherModel.DayForecast(conditionID: condId, temp: temp, description: description, date: date, time: time))
         }
         
         return WeatherModel(cityName: cityNameValue, dayForecast: dayForecast, fromLocation: false)
     }
-    
-//    func reformatDate(in value: String) -> String {
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd"
-//        let date: Date? = dateFormatter.date(from: value)
-//
-//        dateFormatter.dateFormat = "E, d MMM"
-//        
-//        return dateFormatter.string(from: date!)
-//    }
-    
-//    func reformatTime(in value: String) -> String {
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "HH:mm:ss"
-//        let timeFromDate: Date? = dateFormatter.date(from: value)
-//
-//        dateFormatter.dateFormat = "HH:mm"
-//        
-//        return dateFormatter.string(from: timeFromDate!)
-//    }
 }
