@@ -26,7 +26,7 @@ class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITabl
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let forecastCount = forecasts?.dayForecast.count {
+        if let forecastCount = forecasts?.dayForecasts.count {
             return forecastCount
         } else {
             return 0
@@ -34,17 +34,13 @@ class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let forecastData = forecasts?.dayForecast[indexPath.row]
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherReusableCell", for: indexPath) as! WeatherCell
-        
-        DispatchQueue.main.async {
-            cell.weatherIcon.image = UIImage(systemName: forecastData?.icon ?? "")
-            cell.weatherTemp.text = String(forecastData?.temp ?? 0)
-            cell.weatherDescription.text = forecastData?.description ?? ""
-            cell.weatherDate.text = forecastData?.formattedDate
-            cell.weatherTime.text = forecastData?.formattedTime
-        }
+        cell.configureFor(forecasts?.dayForecasts[indexPath.row])
+
         return cell
+
+
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

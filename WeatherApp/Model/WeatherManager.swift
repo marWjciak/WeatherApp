@@ -42,14 +42,20 @@ struct WeatherManager {
     
     func performWeatherRequest(with url: String, fromLocation: Bool) {
         Alamofire.request(url).response { (responseData) in
-            if let weatherData = responseData.data {
 
-                let responseModel = WeatherResponse(data: weatherData)
-                guard var weatherModel = responseModel.parseJSON() else {
+              if let weatherData = responseData.data {
+
+                let json = JSON(weatherData)
+
+                if json != JSON.null {
+                    print(json)
+                }
+
+                let responseModel = WeatherResponse(data: weatherData, fromLocation: fromLocation)
+                guard let weatherModel = responseModel.parseJSON() else {
                     return
                 }
-                
-                weatherModel.fromLocation = fromLocation
+
                 self.delegate?.weatherDataDidUpdate(self, weather: weatherModel)
             }
         }

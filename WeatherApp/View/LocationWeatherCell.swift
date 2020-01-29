@@ -1,5 +1,5 @@
 //
-//  LocationWeatherCell.swift
+//  LocationWeatherswift
 //  WeatherApp
 //
 //  Created by Marcin Wójciak on 17/01/2020.
@@ -10,7 +10,6 @@ import UIKit
 import SwipeCellKit
 
 class LocationWeatherCell: SwipeTableViewCell {
-
 
     @IBOutlet weak var weatherImage: UIImageView!
     @IBOutlet weak var currentTemp: UILabel!
@@ -28,5 +27,17 @@ class LocationWeatherCell: SwipeTableViewCell {
 
         // Configure the view for the selected state
     }
-    
+
+    func configureFor(_ weatherdata: WeatherModel!, andDelegate delegate: SwipeTableViewCellDelegate){
+
+        self.delegate = delegate
+
+        if !weatherdata.dayForecasts.isEmpty {
+            weatherImage.image = UIImage(systemName: weatherdata.dayForecasts[0].icon)
+            currentTemp.text = String(weatherdata.dayForecasts[0].temp)
+            cityName.text = weatherdata.cityName
+            weatherDescription.text = weatherdata.dayForecasts[0].description
+            isFromLocationImage.isHidden = !weatherdata.fromLocation
+        }
+    }
 }

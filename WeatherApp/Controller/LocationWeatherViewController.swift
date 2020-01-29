@@ -18,7 +18,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     var addingData = false
     
     var userLocations = [String]()
-    var weatherData = [WeatherModel(cityName: "empty", dayForecast: [], fromLocation: true)]
+    var weatherData = [WeatherModel(cityName: "empty", dayForecasts: [], fromLocation: true)]
     var locationWithIndexRow: [String: Int] = [:]
     
     override func viewDidLoad() {
@@ -144,28 +144,14 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "LocationWeatherCell", for: indexPath) as! LocationWeatherCell
-        
-        cell.delegate = self
-        
-        let cellRow = self.weatherData[indexPath.row]
-        
-        if !cellRow.dayForecast.isEmpty {
-
-            DispatchQueue.main.async {
-                cell.weatherImage.image = UIImage(systemName: cellRow.dayForecast[0].icon)
-                cell.currentTemp.text = String(cellRow.dayForecast[0].temp)
-                cell.cityName.text = cellRow.cityName
-                cell.weatherDescription.text = cellRow.dayForecast[0].description
-                cell.isFromLocationImage.isHidden = !cellRow.fromLocation
-            }
-        }
+        cell.configureFor(self.weatherData[indexPath.row], andDelegate: self)
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        if weatherData[indexPath.row].dayForecast.isEmpty {
+        if weatherData[indexPath.row].dayForecasts.isEmpty {
             return 0
         } else {
             return tableView.bounds.size.height / 4
@@ -279,15 +265,12 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         
         userLocations = userDefaults.stringArray(forKey: "UserLocations") ?? []
         
-        weatherData = [WeatherModel](repeating: WeatherModel(cityName: "", dayForecast: [], fromLocation: false), count: userLocations.count + 1)
-        weatherData[0] = WeatherModel(cityName: "empty", dayForecast: [], fromLocation: true)
+        weatherData = [WeatherModel](repeating: WeatherModel(cityName: "", dayForecasts: [], fromLocation: false), count: userLocations.count + 1)
+        weatherData[0] = WeatherModel(cityName: "empty", dayForecasts: [], fromLocation: true)
         print(userLocations)
-        
-        
-        for i in 0..<userLocations.count {
-            locationWithIndexRow[userLocations[i]] = i + 1
-        }
-        
+
+        locationWithIndexRow = getLocationIndexes(userLocations: userLocations)
+
         print(locationWithIndexRow)
         
         for location in userLocations {
@@ -301,7 +284,20 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         for i in 1..<weatherData.count {
             userLocations.append(weatherData[i].cityName)
         }
+
+        locationWithIndexRow = getLocationIndexes(userLocations: userLocations)
         
         userDefaults.set(userLocations, forKey: "UserLocations")
+    }
+
+    func getLocationIndexes(userLocations: [String]) -> [String : Int] {
+
+        var locationsWithIndex: [String : Int] = [:]
+
+        for i in 0..<userLocations.count {
+            locationsWithIndex[userLocations[i]] = i + 1
+        }
+
+        return locationsWithIndex
     }
 }
