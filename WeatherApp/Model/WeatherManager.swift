@@ -14,8 +14,8 @@ protocol WeatherManagerDelegate {
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel)
 }
 
+let rawURL = "https://api.openweathermap.org/data/2.5/forecast?appid=ae70447edd3ebdbaca972a829ab5765c&units=metric&lang=pl"
 struct WeatherManager {
-    let rawURL = "https://api.openweathermap.org/data/2.5/forecast?appid=ae70447edd3ebdbaca972a829ab5765c&units=metric"
     var delegate: WeatherManagerDelegate?
     
     func fetchWeatherData(for city: String) {
@@ -45,11 +45,11 @@ struct WeatherManager {
 
               if let weatherData = responseData.data {
 
-                let json = JSON(weatherData)
-
-                if json != JSON.null {
-                    print(json)
-                }
+//                let json = JSON(weatherData)
+//
+//                if json != JSON.null {
+//                    print(json)
+//                }
 
                 let responseModel = WeatherResponse(data: weatherData, fromLocation: fromLocation)
                 guard let weatherModel = responseModel.parseJSON() else {

@@ -20,10 +20,10 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     var userLocations = [String]()
     var weatherData = [WeatherModel(cityName: "empty", dayForecasts: [], fromLocation: true)]
     var locationWithIndexRow: [String: Int] = [:]
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         tableView.rowHeight = 0
         
         tableView.register(UINib(nibName: "LocationWeatherCell", bundle: nil), forCellReuseIdentifier: "LocationWeatherCell")
@@ -40,6 +40,14 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         tableView.dragDelegate = self
         
         loadUserData()
+        fetchUserData()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        saveUserData()
+        print("saved")
     }
     
     //MARK: - Add User Location
@@ -98,36 +106,34 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     //MARK: - Weather Manager Delegate
     
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel) {
-        if weather.fromLocation == true {
+        if weather.fromLocation == true && !weather.cityName.isEmpty{
 
             weatherData[0] = weather
 
         } else {
             
-            let containsWeatherData = weatherData.contains { (element) -> Bool in
-                if element.cityName == weather.cityName {
-                    return true
-                } else {
-                    return false
-                }
+            let containsWeatherData: Bool
+            if locationWithIndexRow.keys.contains(weather.cityName) {
+                containsWeatherData = true
+            } else {
+                containsWeatherData = false
             }
-            
-            if !containsWeatherData {
+
+            if containsWeatherData {
                 if let cityIndex = locationWithIndexRow[weather.cityName] {
                     weatherData.remove(at: cityIndex)
                     weatherData.insert(weather, at: cityIndex)
-                } else {
-                    weatherData.append(weather)
                 }
-                
-                if addingData {
-                    DispatchQueue.main.async {
-                        let indexPath = IndexPath(row: self.weatherData.count - 1, section: 0)
-                        self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-                    }
-                    addingData = false
+            } else {
+                weatherData.append(weather)
+            }
+
+            if addingData {
+                DispatchQueue.main.async {
+                    let indexPath = IndexPath(row: self.weatherData.count - 1, section: 0)
+                    self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
                 }
-                saveUserData()
+                addingData = false
             }
         }
         
@@ -226,21 +232,16 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         }
 
         self.weatherData.remove(at: indexPath.row)
-        saveUserData()
-        
     }
     
     //MARK: - UITableViewDragDelegates
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-
         
         if destinationIndexPath.row != 0 {
             let item = weatherData[sourceIndexPath.row]
             weatherData.remove(at: sourceIndexPath.row)
             weatherData.insert(item, at: destinationIndexPath.row)
-            
-            saveUserData()
         } else {
             tableView.reloadData()
         }
@@ -252,6 +253,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
 
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+
         if indexPath.row == 0 {
             return false
         }
@@ -260,33 +262,28 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
 
     //MARK: - User Data
-    
+
     func loadUserData() {
-        
+
         userLocations = userDefaults.stringArray(forKey: "UserLocations") ?? []
-        
-        weatherData = [WeatherModel](repeating: WeatherModel(cityName: "", dayForecasts: [], fromLocation: false), count: userLocations.count + 1)
+
+        weatherData = [WeatherModel](repeating: WeatherModel(cityName: "aaa", dayForecasts: [], fromLocation: false), count: userLocations.count + 1)
         weatherData[0] = WeatherModel(cityName: "empty", dayForecasts: [], fromLocation: true)
         print(userLocations)
 
         locationWithIndexRow = getLocationIndexes(userLocations: userLocations)
 
         print(locationWithIndexRow)
-        
-        for location in userLocations {
-            weatherManager.fetchWeatherData(for: location)
-        }
     }
-    
+
     func saveUserData() {
+
         userLocations = []
-        
+
         for i in 1..<weatherData.count {
             userLocations.append(weatherData[i].cityName)
         }
 
-        locationWithIndexRow = getLocationIndexes(userLocations: userLocations)
-        
         userDefaults.set(userLocations, forKey: "UserLocations")
     }
 
@@ -299,5 +296,12 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         }
 
         return locationsWithIndex
+    }
+
+    func fetchUserData() {
+
+        for location in userLocations {
+            weatherManager.fetchWeatherData(for: location)
+        }
     }
 }
