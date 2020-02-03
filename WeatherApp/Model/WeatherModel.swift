@@ -15,16 +15,15 @@ class WeatherModel: Codable {
     var dayForecasts: [DayForecast]
     var fromLocation: Bool
 
-    init(_ location: JSON, fromLocation: Bool) {
+    init?(_ location: JSON, fromLocation: Bool) {
+
+        guard location["cod"].stringValue == "200" else { return nil }
 
         self.fromLocation = fromLocation
-
         self.cityName = location["city"]["name"].stringValue
-
         self.dayForecasts = []
 
         location["list"].arrayValue.forEach { (day) in
-
             let dayForecast = DayForecast(day)
             self.dayForecasts.append(dayForecast)
         }

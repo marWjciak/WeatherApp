@@ -70,11 +70,11 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             guard let locationNameString = locationName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
                 return
             }
-            
+
             guard !self.userLocations.contains(locationNameString) else {
                 return
             }
-            
+
             if locationNameString != "" {
                 
                 self.weatherManager.fetchWeatherData(for: locationNameString)
@@ -104,40 +104,49 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
     
     //MARK: - Weather Manager Delegate
-    
+
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel) {
+
         if weather.fromLocation == true && !weather.cityName.isEmpty{
 
             weatherData[0] = weather
 
         } else {
-            
-            let containsWeatherData: Bool
-            if locationWithIndexRow.keys.contains(weather.cityName) {
-                containsWeatherData = true
-            } else {
-                containsWeatherData = false
-            }
 
-            if containsWeatherData {
+            guard !containCity(weather.cityName) else { return }
+
+            if containsWeatherData(weather) {
                 if let cityIndex = locationWithIndexRow[weather.cityName] {
                     weatherData.remove(at: cityIndex)
                     weatherData.insert(weather, at: cityIndex)
                 }
             } else {
                 weatherData.append(weather)
-            }
-
-            if addingData {
-                DispatchQueue.main.async {
-                    let indexPath = IndexPath(row: self.weatherData.count - 1, section: 0)
-                    self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                if addingData {
+                    DispatchQueue.main.async {
+                        let indexPath = IndexPath(row: self.weatherData.count - 1, section: 0)
+                        self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                    }
+                    addingData = false
                 }
-                addingData = false
             }
         }
         
         self.tableView.reloadData()
+    }
+
+    private func containCity(_ cityName: String) -> Bool {
+        return weatherData.contains(where: { (data) -> Bool in
+            return data.cityName == cityName
+        })
+    }
+
+    private func containsWeatherData(_ weather: WeatherModel) -> Bool {
+        if locationWithIndexRow.keys.contains(weather.cityName) {
+            return true
+        } else {
+            return false
+        }
     }
     
     // MARK: - Table view data source
@@ -154,16 +163,16 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         
         return cell
     }
-    
+
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
         if weatherData[indexPath.row].dayForecasts.isEmpty {
             return 0
-        } else {
-            return tableView.bounds.size.height / 4
         }
+
+        return tableView.bounds.size.height / 4
     }
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "mainToDetailWeather", sender: self)
     }
@@ -232,6 +241,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         }
 
         self.weatherData.remove(at: indexPath.row)
+        locationWithIndexRow.removeValue(forKey: cellToRemove.cityName)
     }
     
     //MARK: - UITableViewDragDelegates
@@ -267,7 +277,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         userLocations = userDefaults.stringArray(forKey: "UserLocations") ?? []
 
-        weatherData = [WeatherModel](repeating: WeatherModel(cityName: "aaa", dayForecasts: [], fromLocation: false), count: userLocations.count + 1)
+        weatherData = [WeatherModel](repeating: WeatherModel(cityName: "empty", dayForecasts: [], fromLocation: false), count: userLocations.count + 1)
         weatherData[0] = WeatherModel(cityName: "empty", dayForecasts: [], fromLocation: true)
         print(userLocations)
 

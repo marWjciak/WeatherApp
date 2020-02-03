@@ -35,5 +35,4 @@ class WeatherCell: UITableViewCell {
         weatherDate.text = weatherData?.formattedDate
         weatherTime.text = weatherData?.formattedTime
     }
-    
 }

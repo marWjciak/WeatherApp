@@ -75,10 +75,6 @@ struct WeatherResponse {
     func parseJSON() -> WeatherModel? {
         let data = JSON(self.data)
 
-        if data["cod"].stringValue != "200" {
-            return nil
-        }
-
         return WeatherModel(data, fromLocation: self.fromLocation)
     }
 }

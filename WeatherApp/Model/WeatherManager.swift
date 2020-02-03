@@ -45,12 +45,6 @@ struct WeatherManager {
 
               if let weatherData = responseData.data {
 
-//                let json = JSON(weatherData)
-//
-//                if json != JSON.null {
-//                    print(json)
-//                }
-
                 let responseModel = WeatherResponse(data: weatherData, fromLocation: fromLocation)
                 guard let weatherModel = responseModel.parseJSON() else {
                     return
