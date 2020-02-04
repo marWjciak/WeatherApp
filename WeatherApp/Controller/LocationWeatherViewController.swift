@@ -15,7 +15,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
     var weatherManager = WeatherManager()
-    var addingData = false
     
     var userLocations = [String]()
     var weatherData = [WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: true)]
@@ -53,8 +52,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     //MARK: - Add User Location
     
     @IBAction func addLocationPressed(_ sender: UIBarButtonItem) {
-        
-        addingData = true
         
         var locationName = UITextField()
         
@@ -122,12 +119,9 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                 }
             } else {
                 weatherData.append(weather)
-                if addingData {
-                    DispatchQueue.main.async {
-                        let indexPath = IndexPath(row: self.weatherData.count - 1, section: 0)
-                        self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-                    }
-                    addingData = false
+                DispatchQueue.main.async {
+                    let indexPath = IndexPath(row: self.weatherData.count - 1, section: 0)
+                    self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
                 }
             }
         }
