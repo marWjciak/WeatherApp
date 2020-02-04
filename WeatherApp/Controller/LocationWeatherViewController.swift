@@ -18,7 +18,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     var addingData = false
     
     var userLocations = [String]()
-    var weatherData = [WeatherModel(cityName: "empty", dayForecasts: [], fromLocation: true)]
+    var weatherData = [WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: true)]
     var locationWithIndexRow: [String: Int] = [:]
 
     override func viewDidLoad() {
@@ -26,7 +26,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         tableView.rowHeight = 0
         
-        tableView.register(UINib(nibName: "LocationWeatherCell", bundle: nil), forCellReuseIdentifier: "LocationWeatherCell")
+        tableView.register(UINib(nibName: K.LocationWeatherCell.nibName, bundle: nil), forCellReuseIdentifier: K.LocationWeatherCell.identifier)
         
         weatherManager.delegate = self
         
@@ -75,7 +75,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                 return
             }
 
-            if locationNameString != "" {
+            if !locationNameString.isEmpty {
                 
                 self.weatherManager.fetchWeatherData(for: locationNameString)
             }
@@ -158,7 +158,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "LocationWeatherCell", for: indexPath) as! LocationWeatherCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: K.LocationWeatherCell.identifier, for: indexPath) as! LocationWeatherCell
         cell.configureFor(self.weatherData[indexPath.row], andDelegate: self)
         
         return cell
@@ -174,7 +174,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "mainToDetailWeather", sender: self)
+        performSegue(withIdentifier: K.LocationWeatherCell.cellDetailsSegue, sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -192,6 +192,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         let returnedAction: SwipeAction
         
         if indexPath.row == 0 {
+
             guard orientation == .left else { return nil }
             
             let reloadLocationAction = SwipeAction(style: .default, title: "Refresh") { (action, indexPath) in
@@ -206,6 +207,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             returnedAction = reloadLocationAction
             
         } else {
+
             guard orientation == .right else { return nil }
             
             let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
@@ -275,10 +277,10 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
     func loadUserData() {
 
-        userLocations = userDefaults.stringArray(forKey: "UserLocations") ?? []
+        userLocations = userDefaults.stringArray(forKey: K.userLocationsKey) ?? []
 
-        weatherData = [WeatherModel](repeating: WeatherModel(cityName: "empty", dayForecasts: [], fromLocation: false), count: userLocations.count + 1)
-        weatherData[0] = WeatherModel(cityName: "empty", dayForecasts: [], fromLocation: true)
+        weatherData = [WeatherModel](repeating: WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: false), count: userLocations.count + 1)
+        weatherData[0] = WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: true)
         print(userLocations)
 
         locationWithIndexRow = getLocationIndexes(userLocations: userLocations)
@@ -294,7 +296,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             userLocations.append(weatherData[i].cityName)
         }
 
-        userDefaults.set(userLocations, forKey: "UserLocations")
+        userDefaults.set(userLocations, forKey: K.userLocationsKey)
     }
 
     func getLocationIndexes(userLocations: [String]) -> [String : Int] {

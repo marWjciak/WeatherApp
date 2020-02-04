@@ -19,13 +19,10 @@ class LocationWeatherCell: SwipeTableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 
     func configureFor(_ weatherdata: WeatherModel!, andDelegate delegate: SwipeTableViewCellDelegate){
@@ -33,11 +30,13 @@ class LocationWeatherCell: SwipeTableViewCell {
         self.delegate = delegate
 
         if !weatherdata.dayForecasts.isEmpty {
+
             weatherImage.image = UIImage(systemName: weatherdata.dayForecasts[0].icon)
             currentTemp.text = String(weatherdata.dayForecasts[0].temp)
             cityName.text = weatherdata.cityName
             weatherDescription.text = weatherdata.dayForecasts[0].description
             isFromLocationImage.isHidden = !weatherdata.fromLocation
+
         }
     }
 }

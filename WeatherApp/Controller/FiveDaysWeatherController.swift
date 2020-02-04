@@ -20,7 +20,7 @@ class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITabl
         weatherTableView.estimatedRowHeight = 80.0
         weatherTableView.dataSource = self
         weatherTableView.delegate = self
-        weatherTableView.register(UINib(nibName: "WeatherCell", bundle: nil), forCellReuseIdentifier: "WeatherReusableCell")
+        weatherTableView.register(UINib(nibName: K.WeatherCell.nibName, bundle: nil), forCellReuseIdentifier: K.WeatherCell.identifier)
         
         navigationItem.title = forecasts?.cityName
     }
@@ -35,22 +35,19 @@ class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITabl
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherReusableCell", for: indexPath) as! WeatherCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: K.WeatherCell.identifier, for: indexPath) as! WeatherCell
         cell.configureFor(forecasts?.dayForecasts[indexPath.row])
 
         return cell
-
-
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if  UIDevice.current.orientation.isPortrait {
-            return 100.0
-        } else if  UIDevice.current.orientation.isLandscape {
-            return 85.0
+
+        if  UIDevice.current.orientation.isLandscape {
+            return tableView.bounds.size.height / 4
         }
         
-        return 100.0
+        return tableView.bounds.size.height / 8
     }
     
 }

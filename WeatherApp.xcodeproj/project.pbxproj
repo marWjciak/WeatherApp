@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0557721403BB45B17E1B52EE /* libPods-WeatherApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65C1002A6F8CDB67784C7722 /* libPods-WeatherApp.a */; };
+		D304576A23E930B1002A1635 /* K.swift in Sources */ = {isa = PBXBuildFile; fileRef = D304576923E930B1002A1635 /* K.swift */; };
 		D3698DB723D1F45B00DC6B78 /* LocationWeatherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3698DB523D1F45B00DC6B78 /* LocationWeatherCell.swift */; };
 		D3698DB823D1F45B00DC6B78 /* LocationWeatherCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3698DB623D1F45B00DC6B78 /* LocationWeatherCell.xib */; };
 		D383897523D266A70011129A /* LocationWeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D383897423D266A70011129A /* LocationWeatherViewController.swift */; };
@@ -28,6 +29,7 @@
 		65C1002A6F8CDB67784C7722 /* libPods-WeatherApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WeatherApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		89E4D0F45FB5D40E84E84E70 /* Pods-WeatherApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherApp.debug.xcconfig"; path = "Target Support Files/Pods-WeatherApp/Pods-WeatherApp.debug.xcconfig"; sourceTree = "<group>"; };
 		B80C43B9E370E8AD552718A8 /* Pods-WeatherApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherApp.release.xcconfig"; path = "Target Support Files/Pods-WeatherApp/Pods-WeatherApp.release.xcconfig"; sourceTree = "<group>"; };
+		D304576923E930B1002A1635 /* K.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = K.swift; sourceTree = "<group>"; };
 		D3698DB523D1F45B00DC6B78 /* LocationWeatherCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationWeatherCell.swift; sourceTree = "<group>"; };
 		D3698DB623D1F45B00DC6B78 /* LocationWeatherCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationWeatherCell.xib; sourceTree = "<group>"; };
 		D383897423D266A70011129A /* LocationWeatherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationWeatherViewController.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				D3EE78EB23B2623600786A6F /* Assets.xcassets */,
 				D3EE78ED23B2623600786A6F /* LaunchScreen.storyboard */,
 				D3EE78F023B2623600786A6F /* Info.plist */,
+				D304576923E930B1002A1635 /* K.swift */,
 			);
 			path = WeatherApp;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3EE78E323B2623300786A6F /* AppDelegate.swift in Sources */,
+				D304576A23E930B1002A1635 /* K.swift in Sources */,
 				D383897523D266A70011129A /* LocationWeatherViewController.swift in Sources */,
 				D3EB41BF23B413F70078D3BB /* WeatherManager.swift in Sources */,
 				D3EB422923B79B9B0078D3BB /* FiveDaysWeatherController.swift in Sources */,
