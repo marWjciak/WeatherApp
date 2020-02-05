@@ -9,6 +9,69 @@
 import Foundation
 import SwiftyJSON
 
+
+/*
+ {
+ "cod": "200",
+ "message": 0,
+ "cnt": 40,
+ "list": [
+   {
+     "dt": 1580882400,
+     "main": {
+       "temp": 1.85,
+       "feels_like": -3.43,
+       "temp_min": 1.56,
+       "temp_max": 1.85,
+       "pressure": 1010,
+       "sea_level": 1010,
+       "grnd_level": 978,
+       "humidity": 96,
+       "temp_kf": 0.29
+     },
+     "weather": [
+       {
+         "id": 600,
+         "main": "Snow",
+         "description": "słabe opady śniegu",
+         "icon": "13n"
+       }
+     ],
+     "clouds": {
+       "all": 100
+     },
+     "wind": {
+       "speed": 4.99,
+       "deg": 354
+     },
+     "snow": {
+       "3h": 0.56
+     },
+     "sys": {
+       "pod": "n"
+     },
+     "dt_txt": "2020-02-05 06:00:00"
+   },
+    .
+    .
+    .
+   ],
+   "city": {
+     "id": 3094802,
+     "name": "Kraków",
+     "coord": {
+       "lat": 50.0833,
+       "lon": 19.9167
+     },
+     "country": "PL",
+     "population": 755050,
+     "timezone": 3600,
+     "sunrise": 1580882957,
+     "sunset": 1580917156
+   }
+ }
+ */
+
 class WeatherModel: Codable {
 
     let cityName: String
