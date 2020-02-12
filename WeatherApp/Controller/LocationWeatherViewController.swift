@@ -125,7 +125,8 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                 }
             }
         }
-        
+
+        saveUserData()
         self.tableView.reloadData()
     }
 
@@ -238,6 +239,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         self.weatherData.remove(at: indexPath.row)
         locationWithIndexRow.removeValue(forKey: cellToRemove.cityName)
+        saveUserData()
     }
     
     //MARK: - UITableViewDragDelegates
@@ -248,6 +250,8 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             let item = weatherData[sourceIndexPath.row]
             weatherData.remove(at: sourceIndexPath.row)
             weatherData.insert(item, at: destinationIndexPath.row)
+
+            saveUserData()
         } else {
             tableView.reloadData()
         }
@@ -287,7 +291,12 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         userLocations = []
 
         for i in 1..<weatherData.count {
-            userLocations.append(weatherData[i].cityName)
+            let cityName = weatherData[i].cityName
+            let forecast = weatherData[i].dayForecasts
+
+            if !cityName.elementsEqual(K.emptyCityName) && !forecast.isEmpty {
+                userLocations.append(weatherData[i].cityName)
+            }
         }
 
         userDefaults.set(userLocations, forKey: K.userLocationsKey)
