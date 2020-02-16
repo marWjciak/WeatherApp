@@ -68,9 +68,9 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                 return
             }
 
-            guard !self.userLocations.contains(locationNameString) else {
-                return
-            }
+            guard !self.weatherData.contains(where: { (location) -> Bool in
+                location.cityName == locationNameString
+            }) else { return }
 
             if !locationNameString.isEmpty {
                 
@@ -233,9 +233,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
     
     func removeSelectedCell(_ cellToRemove: WeatherModel, _ indexPath: IndexPath) {
-        self.userLocations.removeAll { (name) -> Bool in
-            name == cellToRemove.cityName
-        }
 
         self.weatherData.remove(at: indexPath.row)
         locationWithIndexRow.removeValue(forKey: cellToRemove.cityName)
