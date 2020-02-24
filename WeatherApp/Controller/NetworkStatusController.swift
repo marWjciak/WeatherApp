@@ -24,7 +24,8 @@ class NetworkStatusController {
         guard let monitor = self.monitor else { return nil }
 
         return monitor.currentPath.availableInterfaces.filter { (interface) -> Bool in
-            monitor.currentPath.usesInterfaceType(interface.type) }.first?.type
+            monitor.currentPath.usesInterfaceType(interface.type)
+        }.first?.type
     }
 
     var availableInterfacesTypes: [NWInterface.InterfaceType]? {
@@ -43,9 +44,7 @@ class NetworkStatusController {
     var didStopMonitoringHandler: (() -> Void)?
     var netStatusChangeHandler: (() -> Void)?
 
-    private init() {
-
-    }
+    private init() {}
 
     deinit {
         stopMonitoring()

@@ -9,7 +9,6 @@
 import Foundation
 import SwiftyJSON
 
-
 /*
  {
  "cod": "200",
@@ -73,20 +72,18 @@ import SwiftyJSON
  */
 
 class WeatherModel: Codable {
-
     let cityName: String
     var dayForecasts: [DayForecast]
     var fromLocation: Bool
 
     init?(_ location: JSON, fromLocation: Bool) {
-
         guard location["cod"].stringValue == "200" else { return nil }
 
         self.fromLocation = fromLocation
         self.cityName = location["city"]["name"].stringValue
         self.dayForecasts = []
 
-        location["list"].arrayValue.forEach { (day) in
+        location["list"].arrayValue.forEach { day in
             let dayForecast = DayForecast(day)
             self.dayForecasts.append(dayForecast)
         }
@@ -106,7 +103,7 @@ class DayForecast: Codable {
     var date: String
     var time: String
 
-    init(_ day: JSON){
+    init(_ day: JSON) {
         self.temp = day["main"]["temp"].intValue
         self.conditionID = day["weather"][0]["id"].intValue
         self.description = day["weather"][0]["description"].stringValue
@@ -131,8 +128,8 @@ class DayForecast: Codable {
     var formattedTime: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm:ss"
-        guard let timeFromDate: Date = dateFormatter.date(from: self.time) else {
-            return self.time
+        guard let timeFromDate: Date = dateFormatter.date(from: time) else {
+            return time
         }
 
         dateFormatter.dateFormat = "HH:mm"

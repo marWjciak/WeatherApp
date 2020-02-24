@@ -6,20 +6,18 @@
 //  Copyright © 2019 Marcin Wójciak. All rights reserved.
 //
 
-import UIKit
 import IQKeyboardManagerSwift
+import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
+
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
-        
+
         return true
     }
 
@@ -38,19 +36,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        //save data here!
+        // save data here!
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        //pass info on forground to top most view controller or all of them
+        // pass info on forground to top most view controller or all of them
         /*
          delegate
          notification center
 
          **/
 
-        //NotificationCenter.default.post(name: NSNotification.Name, object: <#T##Any?#>)
+        // NotificationCenter.default.post(name: NSNotification.Name, object: <#T##Any?#>)
     }
-
 }
-

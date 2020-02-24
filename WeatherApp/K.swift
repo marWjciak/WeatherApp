@@ -22,5 +22,4 @@ struct K {
         static let identifier = "LocationWeatherCell"
         static let cellDetailsSegue = "mainToDetailWeather"
     }
-
 }
