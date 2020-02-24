@@ -1,4 +1,4 @@
-framework module Pods_WeatherApp {
+module Pods_WeatherApp {
   umbrella header "Pods-WeatherApp-umbrella.h"
 
   export *

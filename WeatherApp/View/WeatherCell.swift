@@ -18,13 +18,19 @@ class WeatherCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
-    
+
+    func configureFor(_ weatherData: DayForecast!) {
+
+        weatherIcon.image = UIImage(systemName: weatherData?.icon ?? "")
+        weatherTemp.text = String(weatherData?.temp ?? 0)
+        weatherDescription.text = weatherData?.description ?? ""
+        weatherDate.text = weatherData?.formattedDate
+        weatherTime.text = weatherData?.formattedTime
+
+    }
 }

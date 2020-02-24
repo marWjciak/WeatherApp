@@ -3,7 +3,8 @@
 
 target 'WeatherApp' do
   # Comment the next line if you don't want to use dynamic frameworks
-  use_frameworks!
+# zakomentowane bo wywala blad przy instalacji na iPhone z bezplatnego konta developera 
+# use_frameworks!
 
   # Pods for WeatherApp
 pod 'Alamofire'

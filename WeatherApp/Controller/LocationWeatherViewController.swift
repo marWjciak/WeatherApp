@@ -15,18 +15,17 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
     var weatherManager = WeatherManager()
-    var addingData = false
     
     var userLocations = [String]()
-    var weatherData = [WeatherModel(cityName: "empty", dayForecast: [], fromLocation: true)]
+    var weatherData = [WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: true)]
     var locationWithIndexRow: [String: Int] = [:]
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         tableView.rowHeight = 0
         
-        tableView.register(UINib(nibName: "LocationWeatherCell", bundle: nil), forCellReuseIdentifier: "LocationWeatherCell")
+        tableView.register(UINib(nibName: K.LocationWeatherCell.nibName, bundle: nil), forCellReuseIdentifier: K.LocationWeatherCell.identifier)
         
         weatherManager.delegate = self
         
@@ -40,13 +39,19 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         tableView.dragDelegate = self
         
         loadUserData()
+        fetchUserData()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        saveUserData()
+        print("saved")
     }
     
     //MARK: - Add User Location
     
     @IBAction func addLocationPressed(_ sender: UIBarButtonItem) {
-        
-        addingData = true
         
         var locationName = UITextField()
         
@@ -62,12 +67,12 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             guard let locationNameString = locationName.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
                 return
             }
-            
-            guard !self.userLocations.contains(locationNameString) else {
-                return
-            }
-            
-            if locationNameString != "" {
+
+            guard !self.weatherData.contains(where: { (location) -> Bool in
+                location.cityName == locationNameString
+            }) else { return }
+
+            if !locationNameString.isEmpty {
                 
                 self.weatherManager.fetchWeatherData(for: locationNameString)
             }
@@ -96,41 +101,47 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
     
     //MARK: - Weather Manager Delegate
-    
+
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel) {
-        if weather.fromLocation == true {
-//            weatherData.insert(weather, at: 0)
+
+        if weather.fromLocation == true && !weather.cityName.isEmpty{
+
             weatherData[0] = weather
+
         } else {
-            
-            let containsWeatherData = weatherData.contains { (element) -> Bool in
-                if element.cityName == weather.cityName {
-                    return true
-                } else {
-                    return false
-                }
-            }
-            
-            if !containsWeatherData {
+
+            guard !containCity(weather.cityName) else { return }
+
+            if containsWeatherData(weather) {
                 if let cityIndex = locationWithIndexRow[weather.cityName] {
                     weatherData.remove(at: cityIndex)
                     weatherData.insert(weather, at: cityIndex)
-                } else {
-                    weatherData.append(weather)
                 }
-                
-                if addingData {
-                    DispatchQueue.main.async {
-                        let indexPath = IndexPath(row: self.weatherData.count - 1, section: 0)
-                        self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-                    }
-                    addingData = false
+            } else {
+                weatherData.append(weather)
+                DispatchQueue.main.async {
+                    let indexPath = IndexPath(row: self.weatherData.count - 1, section: 0)
+                    self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
                 }
-                saveUserData()
             }
         }
-        
+
+        saveUserData()
         self.tableView.reloadData()
+    }
+
+    private func containCity(_ cityName: String) -> Bool {
+        return weatherData.contains(where: { (data) -> Bool in
+            return data.cityName == cityName
+        })
+    }
+
+    private func containsWeatherData(_ weather: WeatherModel) -> Bool {
+        if locationWithIndexRow.keys.contains(weather.cityName) {
+            return true
+        } else {
+            return false
+        }
     }
     
     // MARK: - Table view data source
@@ -142,38 +153,23 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "LocationWeatherCell", for: indexPath) as! LocationWeatherCell
-        
-        cell.delegate = self
-        
-        let cellRow = self.weatherData[indexPath.row]
-        
-        if !cellRow.dayForecast.isEmpty {
-        
-            DispatchQueue.main.async {
-                cell.weatherImage.image = UIImage(systemName: cellRow.dayForecast[0].icon)
-                cell.currentTemp.text = String(cellRow.dayForecast[0].temp)
-                cell.cityName.text = cellRow.cityName
-                cell.weatherDescription.text = cellRow.dayForecast[0].description
-                cell.isFromLocationImage.isHidden = !cellRow.fromLocation
-            }
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: K.LocationWeatherCell.identifier, for: indexPath) as! LocationWeatherCell
+        cell.configureFor(self.weatherData[indexPath.row], andDelegate: self)
         
         return cell
     }
-    
+
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-//        if (indexPath.row == 0 && weatherData[0].dayForecast.isEmpty) || weatherData[indexPath.row].dayForecast.isEmpty {
-        if weatherData[indexPath.row].dayForecast.isEmpty {
+        if weatherData[indexPath.row].dayForecasts.isEmpty {
             return 0
-        } else {
-            return tableView.bounds.size.height / 4
         }
+
+        return tableView.bounds.size.height / 4
     }
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "mainToDetailWeather", sender: self)
+        performSegue(withIdentifier: K.LocationWeatherCell.cellDetailsSegue, sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -188,10 +184,10 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     //MARK: - SwipeTableViewCellDelegate
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-//        guard orientation == .right else { return nil }
         let returnedAction: SwipeAction
         
         if indexPath.row == 0 {
+
             guard orientation == .left else { return nil }
             
             let reloadLocationAction = SwipeAction(style: .default, title: "Refresh") { (action, indexPath) in
@@ -206,6 +202,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             returnedAction = reloadLocationAction
             
         } else {
+
             guard orientation == .right else { return nil }
             
             let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
@@ -236,62 +233,87 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
     
     func removeSelectedCell(_ cellToRemove: WeatherModel, _ indexPath: IndexPath) {
-        self.userLocations.removeAll { (name) -> Bool in
-            name == cellToRemove.cityName
-        }
-        
-//        self.userDefaults.set(self.userLocations, forKey: "UserLocations")
+
         self.weatherData.remove(at: indexPath.row)
+        locationWithIndexRow.removeValue(forKey: cellToRemove.cityName)
         saveUserData()
-        
     }
     
-//MARK: - UITableViewDragDelegates
+    //MARK: - UITableViewDragDelegates
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        if sourceIndexPath.row != 0 {
+        
+        if destinationIndexPath.row != 0 {
             let item = weatherData[sourceIndexPath.row]
             weatherData.remove(at: sourceIndexPath.row)
             weatherData.insert(item, at: destinationIndexPath.row)
-            
+
             saveUserData()
+        } else {
+            tableView.reloadData()
         }
     }
     
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
-        return [UIDragItem(itemProvider: NSItemProvider())]
+        return indexPath.row != 0 ? [UIDragItem(itemProvider: NSItemProvider())] : []
+    }
+
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+
+        if indexPath.row == 0 {
+            return false
+        }
+
+        return true
     }
 
     //MARK: - User Data
-    
+
     func loadUserData() {
-        
-        userLocations = userDefaults.stringArray(forKey: "UserLocations") ?? []
-        
-        weatherData = [WeatherModel](repeating: WeatherModel(cityName: "", dayForecast: [], fromLocation: false), count: userLocations.count + 1)
-        weatherData[0] = WeatherModel(cityName: "empty", dayForecast: [], fromLocation: true)
+
+        userLocations = userDefaults.stringArray(forKey: K.userLocationsKey) ?? []
+
+        weatherData = [WeatherModel](repeating: WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: false), count: userLocations.count + 1)
+        weatherData[0] = WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: true)
         print(userLocations)
-        
-        
-        for i in 0..<userLocations.count {
-            locationWithIndexRow[userLocations[i]] = i + 1
-        }
-        
+
+        locationWithIndexRow = getLocationIndexes(userLocations: userLocations)
+
         print(locationWithIndexRow)
-        
+    }
+
+    func saveUserData() {
+
+        userLocations = []
+
+        for i in 1..<weatherData.count {
+            let cityName = weatherData[i].cityName
+            let forecast = weatherData[i].dayForecasts
+
+            if !cityName.elementsEqual(K.emptyCityName) && !forecast.isEmpty {
+                userLocations.append(weatherData[i].cityName)
+            }
+        }
+
+        userDefaults.set(userLocations, forKey: K.userLocationsKey)
+    }
+
+    func getLocationIndexes(userLocations: [String]) -> [String : Int] {
+
+        var locationsWithIndex: [String : Int] = [:]
+
+        for i in 0..<userLocations.count {
+            locationsWithIndex[userLocations[i]] = i + 1
+        }
+
+        return locationsWithIndex
+    }
+
+    func fetchUserData() {
+
         for location in userLocations {
             weatherManager.fetchWeatherData(for: location)
         }
-    }
-    
-    func saveUserData() {
-        userLocations = []
-        
-        for i in 1..<weatherData.count {
-            userLocations.append(weatherData[i].cityName)
-        }
-        
-        userDefaults.set(userLocations, forKey: "UserLocations")
     }
 }
