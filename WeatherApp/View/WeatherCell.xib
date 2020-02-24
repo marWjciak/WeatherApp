@@ -51,7 +51,7 @@
                         <rect key="frame" x="10" y="9.5" width="60" height="60.5"/>
                         <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
-                            <constraint firstAttribute="width" secondItem="qgO-iF-80P" secondAttribute="height" multiplier="1:1" id="Uoh-dZ-jqs"/>
+                            <constraint firstAttribute="width" constant="60" id="3nb-zM-Sa8"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Cloudy Cloudy" textAlignment="right" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="inB-tJ-lo1" userLabel="descriptionLbl">
