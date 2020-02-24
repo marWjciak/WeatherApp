@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation
 import SwipeCellKit
+import Network
 
 class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate, UITableViewDragDelegate {
     
@@ -22,11 +23,31 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        tableView.rowHeight = 0
         
         tableView.register(UINib(nibName: K.LocationWeatherCell.nibName, bundle: nil), forCellReuseIdentifier: K.LocationWeatherCell.identifier)
-        
+
+        turnOnNetworkMonitor()
+        NetworkStatusController.shared.didStartMonitoringHandler = { () in
+            print("Start Monitoring")
+        }
+
+        NetworkStatusController.shared.didStopMonitoringHandler = { () in
+            print("Stop Monitoring")
+        }
+
+        NetworkStatusController.shared.netStatusChangeHandler = { [unowned self] in
+            if NetworkStatusController.shared.isConnected {
+//                self.loadAllData()
+                DispatchQueue.main.async {
+                    self.navigationItem.title = "Connected"
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.navigationItem.title = "Not Connected"
+                }
+            }
+        }
+
         weatherManager.delegate = self
         
         locationManager.requestWhenInUseAuthorization()
@@ -37,16 +58,45 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         // move cell
         tableView.dragInteractionEnabled = true
         tableView.dragDelegate = self
-        
-        loadUserData()
-        fetchUserData()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.loadAllData), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    //check why after reloading data UI blinks
 
-        saveUserData()
-        print("saved")
+    /*
+     reload data in background
+     show loading status (non intrusive)
+     wait for data before touching table
+     update table without UI blink
+     check location dissapearing??
+     load/reload/update data on table pull down
+     **/
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        loadAllData()
+    }
+//    //after checking remove this function
+//
+//
+//
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//
+//        saveUserData()
+//        print("saved")
+//    }
+
+    @objc func loadAllData(){
+        locationManager.requestLocation()
+        loadUserData()
+        fetchUserData()
     }
     
     //MARK: - Add User Location
@@ -315,5 +365,15 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         for location in userLocations {
             weatherManager.fetchWeatherData(for: location)
         }
+    }
+
+    //MARK: - Network Monitor
+
+    private func turnOnNetworkMonitor() {
+        NetworkStatusController.shared.startMonitoring()
+    }
+
+    private func turnOffNetworkMonitor() {
+        NetworkStatusController.shared.stopMonitoring()
     }
 }
