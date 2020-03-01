@@ -154,7 +154,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         if !containCity("empty") {
             tableView.reloadData()
         }
-
     }
 
     private func containCity(_ cityName: String) -> Bool {
@@ -363,7 +362,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                     let connectionImageView = UIImageView(image: connectionImage)
                     connectionImageView.center = CGPoint(x: connectionImageView.center.x - 60, y: connectionImageView.center.y)
                     titleView.addSubview(connectionImageView)
-                    
+
                     let label = UILabel(frame: CGRect(x: 30, y: 0, width: 120, height: 24))
                     label.text = "No Connection"
                     label.center = CGPoint(x: label.center.x - 60, y: label.center.y)
