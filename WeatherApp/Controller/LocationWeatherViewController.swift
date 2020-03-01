@@ -19,6 +19,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     var userLocations = [String]()
     var weatherData = [WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: true)]
     var locationWithIndexRow: [String: Int] = [:]
+    var isLoaded = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,26 +27,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         tableView.register(UINib(nibName: K.LocationWeatherCell.nibName, bundle: nil), forCellReuseIdentifier: K.LocationWeatherCell.identifier)
 
         turnOnNetworkMonitor()
-        NetworkStatusController.shared.didStartMonitoringHandler = { () in
-            print("Start Monitoring")
-        }
-
-        NetworkStatusController.shared.didStopMonitoringHandler = { () in
-            print("Stop Monitoring")
-        }
-
-        NetworkStatusController.shared.netStatusChangeHandler = { [unowned self] in
-            if NetworkStatusController.shared.isConnected {
-//                self.loadAllData()
-                DispatchQueue.main.async {
-                    self.navigationItem.title = "Connected"
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.navigationItem.title = "Not Connected"
-                }
-            }
-        }
+        defineNetworkStatusControllers()
 
         weatherManager.delegate = self
 
@@ -79,24 +61,17 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        loadAllData()
+        if !isLoaded {
+            loadAllData()
+        }
     }
-
-//    //after checking remove this function
-//
-//
-//
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//
-//        saveUserData()
-//        print("saved")
-//    }
 
     @objc func loadAllData() {
         locationManager.requestLocation()
         loadUserData()
         fetchUserData()
+
+        isLoaded = true
     }
 
     // MARK: - Add User Location
@@ -126,7 +101,11 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
         }
 
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+
+        alert.addAction(cancelAction)
         alert.addAction(addUserLocation)
+        alert.preferredAction = addUserLocation
         present(alert, animated: true, completion: nil)
     }
 
@@ -171,7 +150,11 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         }
 
         saveUserData()
-        tableView.reloadData()
+
+        if !containCity("empty") {
+            tableView.reloadData()
+        }
+
     }
 
     private func containCity(_ cityName: String) -> Bool {
@@ -331,7 +314,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         userDefaults.set(userLocations, forKey: K.userLocationsKey)
     }
 
-    func getLocationIndexes(userLocations: [String]) -> [String: Int] {
+    private func getLocationIndexes(userLocations: [String]) -> [String: Int] {
         var locationsWithIndex: [String: Int] = [:]
 
         for i in 0..<userLocations.count {
@@ -341,7 +324,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         return locationsWithIndex
     }
 
-    func fetchUserData() {
+    private func fetchUserData() {
         for location in userLocations {
             weatherManager.fetchWeatherData(for: location)
         }
@@ -355,5 +338,32 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
     private func turnOffNetworkMonitor() {
         NetworkStatusController.shared.stopMonitoring()
+    }
+
+    private func defineNetworkStatusControllers() {
+        NetworkStatusController.shared.didStartMonitoringHandler = { () in
+            print("Start Monitoring")
+        }
+
+        NetworkStatusController.shared.didStopMonitoringHandler = { () in
+            print("Stop Monitoring")
+        }
+
+        NetworkStatusController.shared.netStatusChangeHandler = { [unowned self] in
+            let connectionImage = UIImage(systemName: "wifi.slash")
+            let connectionImageView = UIImageView(image: connectionImage)
+
+            if NetworkStatusController.shared.isConnected {
+                DispatchQueue.main.async {
+                    self.navigationItem.titleView = nil
+                }
+                self.loadAllData()
+            } else {
+                DispatchQueue.main.async {
+                    self.navigationItem.titleView = connectionImageView
+                    self.navigationItem.titleView?.sizeToFit()
+                }
+            }
+        }
     }
 }
