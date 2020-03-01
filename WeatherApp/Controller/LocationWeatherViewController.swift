@@ -351,7 +351,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         NetworkStatusController.shared.netStatusChangeHandler = { [unowned self] in
             let connectionImage = UIImage(systemName: "wifi.slash")
-            let connectionImageView = UIImageView(image: connectionImage)
 
             if NetworkStatusController.shared.isConnected {
                 DispatchQueue.main.async {
@@ -360,7 +359,17 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                 self.loadAllData()
             } else {
                 DispatchQueue.main.async {
-                    self.navigationItem.titleView = connectionImageView
+                    let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+                    let connectionImageView = UIImageView(image: connectionImage)
+                    connectionImageView.center = CGPoint(x: connectionImageView.center.x - 60, y: connectionImageView.center.y)
+                    titleView.addSubview(connectionImageView)
+                    
+                    let label = UILabel(frame: CGRect(x: 30, y: 0, width: 120, height: 24))
+                    label.text = "No Connection"
+                    label.center = CGPoint(x: label.center.x - 60, y: label.center.y)
+                    titleView.addSubview(label)
+
+                    self.navigationItem.titleView = titleView
                     self.navigationItem.titleView?.sizeToFit()
                 }
             }
