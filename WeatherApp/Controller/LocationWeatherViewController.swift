@@ -26,6 +26,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         tableView.register(UINib(nibName: K.LocationWeatherCell.nibName, bundle: nil), forCellReuseIdentifier: K.LocationWeatherCell.identifier)
 
+        configureTableViewRefreshAction()
         turnOnNetworkMonitor()
         defineNetworkStatusControllers()
 
@@ -71,15 +72,18 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         if LoadingIndicator.isRunning {
             DispatchQueue.main.async {
-                LoadingIndicator.stop()
-                LoadingIndicator.start(onView: self.view)
+                LoadingIndicator.update()
             }
         }
     }
 
     @objc func loadAllData() {
         DispatchQueue.main.async {
-            LoadingIndicator.start(onView: self.view)
+            if !self.refreshControl!.isRefreshing {
+                LoadingIndicator.start(on: self.view)
+            } else {
+                self.refreshControl?.beginRefreshing()
+            }
         }
         locationManager.requestLocation()
         loadUserData()
@@ -167,7 +171,11 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         if !containCity("empty") {
             DispatchQueue.main.async {
-                LoadingIndicator.stop()
+                if self.refreshControl!.isRefreshing {
+                    self.refreshControl?.endRefreshing()
+                } else {
+                    LoadingIndicator.stop()
+                }
             }
             tableView.reloadData()
         }
@@ -187,7 +195,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         }
     }
 
-    // MARK: - Table view data source
+    // MARK: - TableView Data Source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return weatherData.count
@@ -217,6 +225,19 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         if let indexPath = tableView.indexPathForSelectedRow {
             destinationVC.forecasts = weatherData[indexPath.row]
+        }
+    }
+
+    //MARK: - TableView Actions
+
+    private func configureTableViewRefreshAction() {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(loadAllData), for: .valueChanged)
+
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = refreshControl
+        } else {
+            tableView.backgroundView = refreshControl
         }
     }
 

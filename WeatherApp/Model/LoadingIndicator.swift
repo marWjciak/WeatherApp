@@ -10,10 +10,10 @@ import Foundation
 import UIKit
 
 class LoadingIndicator {
-    static var spinner: UIActivityIndicatorView?
-    static var style: UIActivityIndicatorView.Style = .large
-    static var backgroundColor = UIColor(named: K.Assets.upperColor)?.withAlphaComponent(0.4)
-    static var color = UIColor { (traitCollection) -> UIColor in
+    fileprivate static var spinner: UIActivityIndicatorView?
+    fileprivate static var style: UIActivityIndicatorView.Style = .large
+    fileprivate static var backgroundColor = UIColor(named: K.Assets.upperColor)?.withAlphaComponent(0.4)
+    fileprivate static var color = UIColor { (traitCollection) -> UIColor in
         switch traitCollection.userInterfaceStyle {
             case .dark:
                 return UIColor.white
@@ -21,11 +21,14 @@ class LoadingIndicator {
                 return UIColor.black
         }
     }
+
+    fileprivate static var tempView: UIView?
+
     static var isRunning: Bool {
         return spinner != nil
     }
 
-    static func start(onView: UIView,
+    static func start(on view: UIView,
                       style: UIActivityIndicatorView.Style = style,
                       backgroundColor: UIColor = backgroundColor!,
                       color: UIColor = color) {
@@ -36,9 +39,9 @@ class LoadingIndicator {
         spinner?.hidesWhenStopped = true
         spinner?.backgroundColor = backgroundColor
         spinner?.color = color
-        onView.addSubview(spinner!)
+        view.addSubview(spinner!)
+        tempView = view
         spinner?.startAnimating()
-
     }
 
     static func stop() {
@@ -47,5 +50,15 @@ class LoadingIndicator {
         spinner?.stopAnimating()
         spinner?.removeFromSuperview()
         spinner = nil
+        tempView = nil
+    }
+
+    static func update() {
+        guard spinner != nil else { return }
+
+        if let view = tempView {
+            stop()
+            start(on: view)
+        }
     }
 }
