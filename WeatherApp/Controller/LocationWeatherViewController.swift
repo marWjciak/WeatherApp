@@ -11,8 +11,6 @@ import Network
 import SwipeCellKit
 import UIKit
 
-let activityIndicator = UIActivityIndicatorView(style: .large)
-
 class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate, UITableViewDragDelegate {
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
@@ -68,8 +66,21 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         }
     }
 
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        if LoadingIndicator.isRunning {
+            DispatchQueue.main.async {
+                LoadingIndicator.stop()
+                LoadingIndicator.start(onView: self.view)
+            }
+        }
+    }
+
     @objc func loadAllData() {
-        self.showSpinner(onView: self.view)
+        DispatchQueue.main.async {
+            LoadingIndicator.start(onView: self.view)
+        }
         locationManager.requestLocation()
         loadUserData()
         fetchUserData()
@@ -155,7 +166,9 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         saveUserData()
 
         if !containCity("empty") {
-            self.hideSpinner()
+            DispatchQueue.main.async {
+                LoadingIndicator.stop()
+            }
             tableView.reloadData()
         }
     }
@@ -376,23 +389,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                     self.navigationItem.titleView?.sizeToFit()
                 }
             }
-        }
-    }
-}
-
-extension UIViewController {
-    func showSpinner(onView: UIView) {
-        DispatchQueue.main.async {
-            activityIndicator.center = self.view.center
-            activityIndicator.hidesWhenStopped = true
-            self.view.addSubview(activityIndicator)
-            activityIndicator.startAnimating()
-        }
-    }
-
-    func hideSpinner() {
-        DispatchQueue.main.async {
-            activityIndicator.stopAnimating()
         }
     }
 }

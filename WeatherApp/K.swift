@@ -22,4 +22,11 @@ struct K {
         static let identifier = "LocationWeatherCell"
         static let cellDetailsSegue = "mainToDetailWeather"
     }
+
+    struct Assets {
+        static let upperColor = "upperColor"
+        static let lowerColor = "lowerColor"
+        static let background = "background"
+        
+    }
 }
