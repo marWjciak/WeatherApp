@@ -13,14 +13,7 @@ class LoadingIndicator {
     fileprivate static var spinner: UIActivityIndicatorView?
     fileprivate static var style: UIActivityIndicatorView.Style = .large
     fileprivate static var backgroundColor = UIColor(named: K.Assets.upperColor)?.withAlphaComponent(0.4)
-    fileprivate static var color = UIColor { (traitCollection) -> UIColor in
-        switch traitCollection.userInterfaceStyle {
-            case .dark:
-                return UIColor.white
-            default:
-                return UIColor.black
-        }
-    }
+    fileprivate static var color = K.color
 
     fileprivate static var tempView: UIView?
 

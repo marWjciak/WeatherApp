@@ -7,10 +7,20 @@
 //
 
 import Foundation
+import UIKit
 
 struct K {
     static let userLocationsKey = "UserLocations"
     static let emptyCityName = "empty"
+
+    static var color = UIColor { (traitCollection) -> UIColor in
+        switch traitCollection.userInterfaceStyle {
+            case .dark:
+                return UIColor.white
+            default:
+                return UIColor.black
+        }
+    }
 
     struct WeatherCell {
         static let nibName = "WeatherCell"

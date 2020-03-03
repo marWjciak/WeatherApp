@@ -221,6 +221,9 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
     private func configureTableViewRefreshAction() {
         let refreshControl = UIRefreshControl()
+        let attributes = [NSAttributedString.Key.foregroundColor: K.color]
+        refreshControl.attributedTitle = NSAttributedString(string: "Forecast Updating...", attributes: attributes)
+
         refreshControl.addTarget(self, action: #selector(loadAllData), for: .valueChanged)
 
         if #available(iOS 10.0, *) {
