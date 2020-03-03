@@ -14,7 +14,7 @@ protocol WeatherManagerDelegate {
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel)
 }
 
-let rawURL = "https://api.openweathermap.org/data/2.5/forecast?appid=ae70447edd3ebdbaca972a829ab5765c&units=metric&lang=pl"
+let rawURL = "https://api.openweathermap.org/data/2.5/forecast?appid=ae70447edd3ebdbaca972a829ab5765c&units=metric" //&lang=pl"
 struct WeatherManager {
     var delegate: WeatherManagerDelegate?
     

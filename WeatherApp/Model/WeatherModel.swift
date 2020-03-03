@@ -120,7 +120,7 @@ class DayForecast: Codable {
         }
 
         dateFormatter.dateFormat = "E, d MMM"
-        dateFormatter.locale = NSLocale(localeIdentifier: "pl_PL") as Locale
+//        dateFormatter.locale = NSLocale(localeIdentifier: "pl_PL") as Locale
 
         return dateFormatter.string(from: date)
     }
