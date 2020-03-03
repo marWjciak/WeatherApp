@@ -44,17 +44,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         NotificationCenter.default.addObserver(self, selector: #selector(loadAllData), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 
-    // check why after reloading data UI blinks
-
-    /*
-     reload data in background
-     show loading status (non intrusive)
-     wait for data before touching table
-     update table without UI blink
-     check location dissapearing??
-     load/reload/update data on table pull down
-     **/
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
@@ -228,7 +217,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         }
     }
 
-    //MARK: - TableView Actions
+    // MARK: - TableView Actions
 
     private func configureTableViewRefreshAction() {
         let refreshControl = UIRefreshControl()
@@ -246,46 +235,25 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         let returnedAction: SwipeAction
 
-        if indexPath.row == 0 {
-            guard orientation == .left else { return nil }
+        guard orientation == .right, indexPath.row != 0 else { return nil }
 
-            let reloadLocationAction = SwipeAction(style: .default, title: "Refresh") { _, indexPath in
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { _, indexPath in
 
-                self.tableView.reloadRows(at: [indexPath], with: .left)
-                self.locationManager.requestLocation()
-            }
+            let cellToRemove = self.weatherData[indexPath.row]
 
-            reloadLocationAction.image = UIImage(systemName: "arrow.uturn.right")
-            reloadLocationAction.backgroundColor = .blue
-
-            returnedAction = reloadLocationAction
-
-        } else {
-            guard orientation == .right else { return nil }
-
-            let deleteAction = SwipeAction(style: .destructive, title: "Delete") { _, indexPath in
-
-                let cellToRemove = self.weatherData[indexPath.row]
-
-                self.removeSelectedCell(cellToRemove, indexPath)
-            }
-
-            deleteAction.image = UIImage(systemName: "trash")
-
-            returnedAction = deleteAction
+            self.removeSelectedCell(cellToRemove, indexPath)
         }
+
+        deleteAction.image = UIImage(systemName: "trash")
+
+        returnedAction = deleteAction
 
         return [returnedAction]
     }
 
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
         var options = SwipeOptions()
-
-        if orientation == .right {
-            options.expansionStyle = .destructive
-        } else {
-            options.expansionStyle = .destructive(automaticallyDelete: false)
-        }
+        options.expansionStyle = .destructive
 
         return options
     }
