@@ -202,7 +202,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             return 0
         }
 
-        return tableView.bounds.size.height / 4
+        return (tableView.bounds.size.height - (tabBarController?.tabBar.bounds.height)!) / 4
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

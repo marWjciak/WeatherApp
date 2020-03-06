@@ -9,23 +9,18 @@
 import Foundation
 import UIKit
 
-class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class FiveDaysWeatherController: UITableViewController {
     var forecasts: WeatherModel?
-    
-    @IBOutlet var weatherTableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        weatherTableView.estimatedRowHeight = 80.0
-        weatherTableView.dataSource = self
-        weatherTableView.delegate = self
-        weatherTableView.register(UINib(nibName: K.WeatherCell.nibName, bundle: nil), forCellReuseIdentifier: K.WeatherCell.identifier)
+
+        tableView.register(UINib(nibName: K.WeatherCell.nibName, bundle: nil), forCellReuseIdentifier: K.WeatherCell.identifier)
         
         navigationItem.title = forecasts?.cityName
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let forecastCount = forecasts?.dayForecasts.count {
             return forecastCount
         } else {
@@ -33,18 +28,19 @@ class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITabl
         }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: K.WeatherCell.identifier, for: indexPath) as! WeatherCell
         cell.configureFor(forecasts?.dayForecasts[indexPath.row])
         
         return cell
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let tabBarHeight = tabBarController?.tabBar.bounds.height
         if UIDevice.current.orientation.isLandscape {
-            return tableView.bounds.size.height / 4
+            return (tableView.bounds.size.height - (tabBarHeight ?? 0)) / 4
         }
         
-        return tableView.bounds.size.height / 8
+        return (tableView.bounds.size.height - (tabBarHeight ?? 0)) / 8
     }
 }
