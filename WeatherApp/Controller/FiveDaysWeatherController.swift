@@ -12,7 +12,7 @@ import UIKit
 class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var forecasts: WeatherModel?
     
-    @IBOutlet weak var weatherTableView: UITableView!
+    @IBOutlet var weatherTableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +24,7 @@ class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITabl
         
         navigationItem.title = forecasts?.cityName
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let forecastCount = forecasts?.dayForecasts.count {
             return forecastCount
@@ -34,20 +34,17 @@ class FiveDaysWeatherController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         let cell = tableView.dequeueReusableCell(withIdentifier: K.WeatherCell.identifier, for: indexPath) as! WeatherCell
         cell.configureFor(forecasts?.dayForecasts[indexPath.row])
-
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-
-        if  UIDevice.current.orientation.isLandscape {
+        if UIDevice.current.orientation.isLandscape {
             return tableView.bounds.size.height / 4
         }
         
         return tableView.bounds.size.height / 8
     }
-    
 }

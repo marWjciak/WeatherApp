@@ -9,13 +9,12 @@
 import UIKit
 
 class WeatherCell: UITableViewCell {
+    @IBOutlet var weatherIcon: UIImageView!
+    @IBOutlet var weatherDescription: UILabel!
+    @IBOutlet var weatherTemp: UILabel!
+    @IBOutlet var weatherDate: UILabel!
+    @IBOutlet var weatherTime: UILabel!
 
-    @IBOutlet weak var weatherIcon: UIImageView!
-    @IBOutlet weak var weatherDescription: UILabel!
-    @IBOutlet weak var weatherTemp: UILabel!
-    @IBOutlet weak var weatherDate: UILabel!
-    @IBOutlet weak var weatherTime: UILabel!
-    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -25,12 +24,10 @@ class WeatherCell: UITableViewCell {
     }
 
     func configureFor(_ weatherData: DayForecast!) {
-
         weatherIcon.image = UIImage(systemName: weatherData?.icon ?? "")
         weatherTemp.text = String(weatherData?.temp ?? 0)
         weatherDescription.text = weatherData?.description ?? ""
         weatherDate.text = weatherData?.formattedDate
         weatherTime.text = weatherData?.formattedTime
-
     }
 }

@@ -6,22 +6,25 @@
 //  Copyright © 2019 Marcin Wójciak. All rights reserved.
 //
 
-import UIKit
 import IQKeyboardManagerSwift
+import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
+
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
-        
+
         return true
+    }
+
+    //MARK: - Set Application Supported Interface Orientations
+
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return [.allButUpsideDown]
     }
 
     // MARK: UISceneSession Lifecycle
@@ -38,5 +41,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 
-}
+    func applicationWillResignActive(_ application: UIApplication) {
+        // save data here!
+    }
 
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        // pass info on forground to top most view controller or all of them
+        /*
+         delegate
+         notification center
+
+         **/
+
+        // NotificationCenter.default.post(name: NSNotification.Name, object: <#T##Any?#>)
+    }
+}
