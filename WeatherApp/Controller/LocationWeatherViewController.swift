@@ -125,6 +125,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         let lat = String(location.coordinate.latitude)
         let lon = String(location.coordinate.longitude)
+        Locations.shared.currentLocation = location
 
         weatherManager.fetchWeatherData(latitude: lat, longitude: lon)
     }
@@ -300,7 +301,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         weatherData = [WeatherModel](repeating: WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: false), count: userLocations.count + 1)
         weatherData[0] = WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: true)
-        print(userLocations)
 
         locationWithIndexRow = getLocationIndexes(userLocations: userLocations)
 
@@ -319,6 +319,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
         }
 
+        Locations.shared.globalWeatherData = weatherData
         userDefaults.set(userLocations, forKey: K.userLocationsKey)
     }
 
