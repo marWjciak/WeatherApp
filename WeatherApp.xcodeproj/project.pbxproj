@@ -10,6 +10,7 @@
 		0557721403BB45B17E1B52EE /* libPods-WeatherApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65C1002A6F8CDB67784C7722 /* libPods-WeatherApp.a */; };
 		D303F6B6240DA305005C5386 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D303F6B5240DA305005C5386 /* LoadingIndicator.swift */; };
 		D304576A23E930B1002A1635 /* K.swift in Sources */ = {isa = PBXBuildFile; fileRef = D304576923E930B1002A1635 /* K.swift */; };
+		D31F85F0241D839D00E767EE /* FlipSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31F85EF241D839D00E767EE /* FlipSegue.swift */; };
 		D3698DB723D1F45B00DC6B78 /* LocationWeatherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3698DB523D1F45B00DC6B78 /* LocationWeatherCell.swift */; };
 		D3698DB823D1F45B00DC6B78 /* LocationWeatherCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3698DB623D1F45B00DC6B78 /* LocationWeatherCell.xib */; };
 		D383897523D266A70011129A /* LocationWeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D383897423D266A70011129A /* LocationWeatherViewController.swift */; };
@@ -36,6 +37,7 @@
 		B80C43B9E370E8AD552718A8 /* Pods-WeatherApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherApp.release.xcconfig"; path = "Target Support Files/Pods-WeatherApp/Pods-WeatherApp.release.xcconfig"; sourceTree = "<group>"; };
 		D303F6B5240DA305005C5386 /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
 		D304576923E930B1002A1635 /* K.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = K.swift; sourceTree = "<group>"; };
+		D31F85EF241D839D00E767EE /* FlipSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipSegue.swift; sourceTree = "<group>"; };
 		D3698DB523D1F45B00DC6B78 /* LocationWeatherCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationWeatherCell.swift; sourceTree = "<group>"; };
 		D3698DB623D1F45B00DC6B78 /* LocationWeatherCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationWeatherCell.xib; sourceTree = "<group>"; };
 		D383897423D266A70011129A /* LocationWeatherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationWeatherViewController.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				D383897423D266A70011129A /* LocationWeatherViewController.swift */,
 				D3D6446A2401D0A6001DDA78 /* NetworkStatusController.swift */,
 				D3A29A2F24123F79006CDFB1 /* MapViewController.swift */,
+				D31F85EF241D839D00E767EE /* FlipSegue.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				D3A29A3424159B4A006CDFB1 /* ForecastPin.swift in Sources */,
 				D3EE78E323B2623300786A6F /* AppDelegate.swift in Sources */,
 				D304576A23E930B1002A1635 /* K.swift in Sources */,
+				D31F85F0241D839D00E767EE /* FlipSegue.swift in Sources */,
 				D383897523D266A70011129A /* LocationWeatherViewController.swift in Sources */,
 				D3EB41BF23B413F70078D3BB /* WeatherManager.swift in Sources */,
 				D3EB422923B79B9B0078D3BB /* FiveDaysWeatherController.swift in Sources */,

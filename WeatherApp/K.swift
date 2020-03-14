@@ -31,6 +31,7 @@ struct K {
         static let nibName = "LocationWeatherCell"
         static let identifier = "LocationWeatherCell"
         static let cellDetailsSegue = "mainToDetailWeather"
+        static let listToMap = "fromListToMap"
     }
 
     struct Assets {

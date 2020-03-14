@@ -36,11 +36,10 @@ class FiveDaysWeatherController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let tabBarHeight = tabBarController?.tabBar.bounds.height
         if UIDevice.current.orientation.isLandscape {
-            return (tableView.bounds.size.height - (tabBarHeight ?? 0)) / 4
+            return tableView.bounds.size.height / 4
         }
         
-        return (tableView.bounds.size.height - (tabBarHeight ?? 0)) / 8
+        return tableView.bounds.size.height / 8
     }
 }

@@ -22,6 +22,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         super.viewDidLoad()
 
         mapView.delegate = self
+        navigationItem.hidesBackButton = true
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "list.dash"), style: .plain, target: self, action: #selector(back))
+        navigationItem.leftBarButtonItem = backButton
 
         NotificationCenter.default.addObserver(self, selector: #selector(loadAllLocations), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
@@ -38,6 +41,17 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         mapView.setRegion(coordinateRegion, animated: true)
     }
 
+    @objc private func back() {
+        if let topView = navigationController?.viewControllers[0].view {
+            UIView.transition(from: view,
+                              to: topView,
+                              duration: 0.5,
+                              options: UIView.AnimationOptions.transitionFlipFromRight,
+                              completion: nil)
+        }
+        navigationController?.popViewController(animated: false)
+    }
+
     // MARK: - Pin Methods
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -47,7 +61,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         if annotationView == nil {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
-            
+
         } else {
             annotationView?.annotation = annotation
         }
@@ -58,7 +72,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 .withConfiguration(UIImage.SymbolConfiguration(weight: .regular))
                 .withTintColor(K.color, renderingMode: .alwaysTemplate)
             let size = CGSize(width: 40, height: 40)
-                annotationView?.image = UIGraphicsImageRenderer(size: size).image { _ in
+            annotationView?.image = UIGraphicsImageRenderer(size: size).image { _ in
                 annotationImage?.draw(in: CGRect(origin: .zero, size: size))
             }
         }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="S85-o2-6dK">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ADq-Ob-uUL">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
@@ -68,6 +68,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="JtS-Vc-azC">
+                        <barButtonItem key="leftBarButtonItem" title="Map" image="map" catalog="system" id="V7a-RK-vgQ">
+                            <connections>
+                                <action selector="mapButtonAction:" destination="sN7-Y8-PO1" id="IkQ-qq-Jvn"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="F3m-Wk-B6E">
                             <connections>
                                 <action selector="addLocationPressed:" destination="sN7-Y8-PO1" id="1V3-7r-bRT"/>
@@ -76,6 +81,7 @@
                     </navigationItem>
                     <connections>
                         <segue destination="9Nl-Z6-Y85" kind="show" identifier="mainToDetailWeather" id="Nwe-Me-J8M"/>
+                        <segue destination="CNK-8w-pMT" kind="show" identifier="fromListToMap" id="hDn-Z8-ecp"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d3E-pZ-qR1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -85,13 +91,14 @@
         <!--Map View Controller-->
         <scene sceneID="aD5-Tf-kib">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cqp-o6-G5r" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="CNK-8w-pMT" userLabel="Map View Controller" customClass="MapViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bjr-my-37t">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ryP-Cl-fpP">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" name="upperColor"/>
@@ -104,35 +111,13 @@
                         <viewLayoutGuide key="safeArea" id="Z0G-C0-8T7"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="map" catalog="system" id="sUc-sG-5C0"/>
+                    <navigationItem key="navigationItem" id="KSy-75-bdt"/>
                     <connections>
                         <outlet property="mapView" destination="ryP-Cl-fpP" id="NpK-6f-h7q"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cqp-o6-G5r" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="868" y="1522"/>
-        </scene>
-        <!--Tab Bar Controller-->
-        <scene sceneID="pcl-eq-PhY">
-            <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="S85-o2-6dK" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="7sf-XF-gqQ">
-                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <color key="barTintColor" name="lowerColor"/>
-                        <color key="selectedImageTintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                    </tabBar>
-                    <connections>
-                        <segue destination="ADq-Ob-uUL" kind="relationship" relationship="viewControllers" id="tHs-i5-HOX"/>
-                        <segue destination="CNK-8w-pMT" kind="relationship" relationship="viewControllers" id="xEG-Fd-23g"/>
-                    </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hO5-2D-oL1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-71.200000000000003" y="1166.2668665667168"/>
+            <point key="canvasLocation" x="1951" y="1645"/>
         </scene>
     </scenes>
     <resources>

@@ -21,6 +21,10 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     var locationWithIndexRow: [String: Int] = [:]
     var isLoaded = false
 
+    @IBAction func mapButtonAction(_ sender: UIBarButtonItem) {
+        performSegue(withIdentifier: K.LocationWeatherCell.listToMap, sender: self)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -203,7 +207,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             return 0
         }
 
-        return (tableView.bounds.size.height - (tabBarController?.tabBar.bounds.height)!) / 4
+        return tableView.bounds.size.height / 4
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -211,10 +215,22 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let destinationVC = segue.destination as! FiveDaysWeatherController
+        switch segue.identifier {
+            case K.LocationWeatherCell.cellDetailsSegue:
+                let destinationVC = segue.destination as! FiveDaysWeatherController
 
-        if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.forecasts = weatherData[indexPath.row]
+                if let indexPath = tableView.indexPathForSelectedRow {
+                    destinationVC.forecasts = weatherData[indexPath.row]
+                }
+
+            case K.LocationWeatherCell.listToMap:
+                UIView.transition(from: self.view,
+                                  to: segue.destination.view,
+                                          duration: 0.5,
+                                          options: UIView.AnimationOptions.transitionFlipFromLeft,
+                                          completion: nil)
+            default:
+                return
         }
     }
 
