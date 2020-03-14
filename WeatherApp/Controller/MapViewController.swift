@@ -54,7 +54,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
         let forecastAnnotation = annotation as! ForecastPin
         if let safeImage = forecastAnnotation.image {
-//            let annotationImage = UIImage(systemName: safeImage, withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .black, scale: .medium))
             let annotationImage = UIImage(systemName: safeImage)?
                 .withConfiguration(UIImage.SymbolConfiguration(pointSize: 30, weight: .black, scale: .medium))
                 .withTintColor(K.color, renderingMode: .alwaysTemplate)
