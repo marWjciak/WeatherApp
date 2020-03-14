@@ -29,7 +29,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         currentLocation = Locations.shared.currentLocation
         weatherData = boxLocation(Locations.shared.globalWeatherData).value
-        
+
         loadAllLocations()
     }
 
@@ -54,8 +54,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
         let forecastAnnotation = annotation as! ForecastPin
         if let safeImage = forecastAnnotation.image {
-            let annotationImage = UIImage(systemName: safeImage, withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .black, scale: .medium))
-            annotationImage?.withTintColor(K.color)
+//            let annotationImage = UIImage(systemName: safeImage, withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .black, scale: .medium))
+            let annotationImage = UIImage(systemName: safeImage)?
+                .withConfiguration(UIImage.SymbolConfiguration(pointSize: 30, weight: .black, scale: .medium))
+                .withTintColor(K.color, renderingMode: .alwaysTemplate)
             annotationView?.image = annotationImage
         }
 
