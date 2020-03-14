@@ -23,13 +23,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
         mapView.delegate = self
 
-        currentLocation = Locations.shared.currentLocation
-        weatherData = boxLocation(Locations.shared.globalWeatherData).value
-
         NotificationCenter.default.addObserver(self, selector: #selector(loadAllLocations), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        currentLocation = Locations.shared.currentLocation
+        weatherData = boxLocation(Locations.shared.globalWeatherData).value
+        
         loadAllLocations()
     }
 
