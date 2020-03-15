@@ -73,6 +73,8 @@ import SwiftyJSON
 
 class WeatherModel: Codable {
     let cityName: String
+    let latitude: Double
+    let longitude: Double
     var dayForecasts: [DayForecast]
     var fromLocation: Bool
 
@@ -81,6 +83,8 @@ class WeatherModel: Codable {
 
         self.fromLocation = fromLocation
         self.cityName = location["city"]["name"].stringValue
+        self.latitude = location["city"]["coord"]["lat"].doubleValue
+        self.longitude = location["city"]["coord"]["lon"].doubleValue
         self.dayForecasts = []
 
         location["list"].arrayValue.forEach { day in
@@ -93,6 +97,8 @@ class WeatherModel: Codable {
         self.cityName = cityName
         self.dayForecasts = dayForecasts
         self.fromLocation = fromLocation
+        self.latitude = 0
+        self.longitude = 0
     }
 }
 

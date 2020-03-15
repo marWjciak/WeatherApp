@@ -119,16 +119,15 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         for location in locations {
             let city = location.cityName
             let forecast = location.dayForecasts[0]
+            let lat = CLLocationDegrees(exactly: location.latitude)
+            let lon = CLLocationDegrees(exactly: location.longitude)
 
             if location.fromLocation {
                 guard let _currentLocation = currentLocation else { return }
                 addPoint(with: _currentLocation.coordinate, "Current Location", String(forecast.temp), forecast.icon)
             } else {
-                getLocation(for: city) { placemark in
-                    if let coordinate = placemark?.location?.coordinate {
-                        self.addPoint(with: coordinate, city, String(forecast.temp), forecast.icon)
-                    }
-                }
+                guard let _lat = lat, let _lon = lon else { return }
+                self.addPoint(with: CLLocationCoordinate2D(latitude: _lat, longitude: _lon), city, String(forecast.temp), forecast.icon)
             }
         }
     }
