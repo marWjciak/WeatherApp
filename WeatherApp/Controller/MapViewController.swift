@@ -27,6 +27,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         navigationItem.leftBarButtonItem = backButton
 
         NotificationCenter.default.addObserver(self, selector: #selector(loadAllLocations), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(addSavedLocations), name: NSNotification.Name("reloadPinedLocations"), object: nil)
+
+        let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(longGesture:)))
+        mapView.addGestureRecognizer(longGesture)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -41,6 +45,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         mapView.setRegion(coordinateRegion, animated: true)
     }
 
+    private func centerMapOnCurrentLocation() {
+        if let location = currentLocation {
+            let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
+            mapView.setRegion(coordinateRegion, animated: true)
+        }
+    }
+
+
     @objc private func back() {
         if let topView = navigationController?.viewControllers[0].view {
             UIView.transition(from: view,
@@ -50,6 +62,16 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                               completion: nil)
         }
         navigationController?.popViewController(animated: false)
+    }
+
+    @objc private func longPressAction(longGesture: UILongPressGestureRecognizer) {
+        let point = longGesture.location(in: mapView)
+        let pointCoords = mapView.convert(point, toCoordinateFrom: mapView)
+        let coordData: [String : String] = ["lat" : String(pointCoords.latitude),
+                                            "long" : String(pointCoords.longitude)]
+
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "addLocationFromMap"), object: nil, userInfo: coordData)
+
     }
 
     // MARK: - Pin Methods
@@ -90,7 +112,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         mapView.addAnnotation(annotation)
     }
 
-    private func addSavedLocations() {
+    @objc private func addSavedLocations() {
+        weatherData = Locations.shared.globalWeatherData
         guard let locations = weatherData else { return }
 
         for location in locations {
@@ -99,7 +122,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
             if location.fromLocation {
                 guard let _currentLocation = currentLocation else { return }
-                centerMapOnLocation(_currentLocation)
                 addPoint(with: _currentLocation.coordinate, "Current Location", String(forecast.temp), forecast.icon)
             } else {
                 getLocation(for: city) { placemark in
@@ -114,6 +136,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @objc private func loadAllLocations() {
         mapView.removeAnnotations(mapView.annotations)
         addSavedLocations()
+        centerMapOnCurrentLocation()
     }
 
     // MARK: - Location

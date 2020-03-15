@@ -26,9 +26,9 @@ struct WeatherManager {
         performWeatherRequest(with: URL, fromLocation: false)
     }
     
-    func fetchWeatherData(latitude: String, longitude: String) {
+    func fetchWeatherData(latitude: String, longitude: String, fromLocation: Bool) {
         let urlString = "\(rawURL)&lat=\(latitude)&lon=\(longitude)"
-        performWeatherRequest(with: urlString, fromLocation: true)
+        performWeatherRequest(with: urlString, fromLocation: fromLocation)
     }
     
     private func prepareNameToRequest(for cityName: String) -> String {
@@ -38,7 +38,7 @@ struct WeatherManager {
         return removedDiacritics
     }
     
-    func performWeatherRequest(with url: String, fromLocation: Bool) {
+    private func performWeatherRequest(with url: String, fromLocation: Bool) {
         Alamofire.request(url).response { responseData in
             
             if let weatherData = responseData.data {

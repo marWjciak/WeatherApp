@@ -46,6 +46,8 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         tableView.dragDelegate = self
 
         NotificationCenter.default.addObserver(self, selector: #selector(loadAllData), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.addLocationFromMap(_:)),
+                                               name: NSNotification.Name(rawValue: "addLocationFromMap"), object: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -120,6 +122,14 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         present(alert, animated: true, completion: nil)
     }
 
+    @objc private func addLocationFromMap(_ notification: NSNotification) {
+        if let coords = notification.userInfo as NSDictionary? {
+            if let latitude = coords["lat"] as? String, let longitude = coords["long"] as? String{
+                weatherManager.fetchWeatherData(latitude: latitude, longitude: longitude, fromLocation: false)
+            }
+        }
+    }
+
     // MARK: - Location Manager Delegate
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -131,7 +141,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         let lon = String(location.coordinate.longitude)
         Locations.shared.currentLocation = location
 
-        weatherManager.fetchWeatherData(latitude: lat, longitude: lon)
+        weatherManager.fetchWeatherData(latitude: lat, longitude: lon, fromLocation: true)
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -173,6 +183,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
             tableView.reloadData()
         }
+        NotificationCenter.default.post(name: NSNotification.Name("reloadPinedLocations"), object: nil)
     }
 
     private func containCity(_ cityName: String) -> Bool {
