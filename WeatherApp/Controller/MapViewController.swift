@@ -26,7 +26,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let backButton = UIBarButtonItem(image: UIImage(systemName: "list.dash"), style: .plain, target: self, action: #selector(back))
         navigationItem.leftBarButtonItem = backButton
 
-        NotificationCenter.default.addObserver(self, selector: #selector(loadAllLocations), name: UIApplication.willEnterForegroundNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(loadAllLocations), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dismissView), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(addSavedLocations), name: NSNotification.Name("reloadPinedLocations"), object: nil)
 
         let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(longGesture:)))
@@ -74,6 +75,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
     }
 
+    @objc private func dismissView() {
+        self.navigationController?.popViewController(animated: false)
+    }
+
     // MARK: - Pin Methods
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -113,8 +118,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
 
     @objc private func addSavedLocations() {
-        weatherData = Locations.shared.globalWeatherData
-        guard let locations = weatherData else { return }
+        print("addSaved")
+        mapView.removeAnnotations(mapView.annotations)
+        weatherData = boxLocation(Locations.shared.globalWeatherData).value
+        guard let locations = weatherData, !locations.contains(where: { (location) -> Bool in
+            location.cityName == "empty"
+        }) else { return }
 
         for location in locations {
             let city = location.cityName
@@ -133,7 +142,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
 
     @objc private func loadAllLocations() {
-        mapView.removeAnnotations(mapView.annotations)
+        print("load All")
         addSavedLocations()
         centerMapOnCurrentLocation()
     }
