@@ -26,7 +26,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let backButton = UIBarButtonItem(image: UIImage(systemName: "list.dash"), style: .plain, target: self, action: #selector(back))
         navigationItem.leftBarButtonItem = backButton
 
-//        NotificationCenter.default.addObserver(self, selector: #selector(loadAllLocations), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dismissView), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(addSavedLocations), name: NSNotification.Name("reloadPinedLocations"), object: nil)
 
