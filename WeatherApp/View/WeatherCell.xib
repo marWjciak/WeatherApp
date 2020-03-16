@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,7 +17,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="475" height="80"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="8b7-9U-aQF">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="redraw" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background2" translatesAutoresizingMaskIntoConstraints="NO" id="8b7-9U-aQF">
                         <rect key="frame" x="0.0" y="0.0" width="475" height="80"/>
                         <color key="tintColor" red="0.4397089481" green="0.78461295369999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </imageView>
@@ -67,6 +68,8 @@
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
+                <color key="backgroundColor" name="Color"/>
+                <color key="tintColor" name="Color"/>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="QjZ-d7-rTC" secondAttribute="bottom" constant="10" id="3Mg-V8-6rQ"/>
                     <constraint firstAttribute="trailing" secondItem="inB-tJ-lo1" secondAttribute="trailing" constant="10" id="7OC-vF-RWa"/>
@@ -92,6 +95,7 @@
                     <constraint firstItem="2XT-g2-XRi" firstAttribute="top" secondItem="q82-lz-rtF" secondAttribute="bottom" constant="1" id="yPi-XW-cIG"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" red="0.1418065131" green="0.62263184790000003" blue="0.99947863820000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="weatherDate" destination="2XT-g2-XRi" id="2si-9j-yJ9"/>
@@ -104,7 +108,10 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="background" width="256" height="341"/>
+        <image name="background2" width="256" height="341"/>
         <image name="sun.max" catalog="system" width="64" height="62"/>
+        <namedColor name="Color">
+            <color red="0.1418065131" green="0.62263184790000003" blue="0.99947863820000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

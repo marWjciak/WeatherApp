@@ -3,6 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,7 +17,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="389" height="142"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="P7C-3A-OU1">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="redraw" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background2" translatesAutoresizingMaskIntoConstraints="NO" id="P7C-3A-OU1">
                         <rect key="frame" x="0.0" y="0.0" width="389" height="142"/>
                         <color key="tintColor" red="0.04415474087" green="0.3405870795" blue="0.58398956059999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </imageView>
@@ -65,6 +66,8 @@
                         </constraints>
                     </imageView>
                 </subviews>
+                <color key="backgroundColor" name="Color"/>
+                <color key="tintColor" name="Color"/>
                 <constraints>
                     <constraint firstItem="HEM-a5-9UD" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="3R9-hT-47o"/>
                     <constraint firstItem="a0t-y9-XTB" firstAttribute="leading" secondItem="yA4-5j-von" secondAttribute="trailing" id="3gA-TW-h2m"/>
@@ -87,6 +90,7 @@
                     <constraint firstItem="P7C-3A-OU1" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="w6u-jV-Z6c"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" name="Color"/>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="cityName" destination="HEM-a5-9UD" id="apY-su-8pd"/>
@@ -99,8 +103,11 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="background" width="256" height="341"/>
+        <image name="background2" width="256" height="341"/>
         <image name="location.fill" catalog="system" width="64" height="56"/>
         <image name="sun.max" catalog="system" width="64" height="62"/>
+        <namedColor name="Color">
+            <color red="0.1418065131" green="0.62263184790000003" blue="0.99947863820000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

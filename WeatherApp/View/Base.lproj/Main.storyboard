@@ -17,6 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" name="lowerColor"/>
                         <color key="tintColor" name="lowerColor"/>
+                        <color key="sectionIndexBackgroundColor" name="Color"/>
                         <connections>
                             <outlet property="dataSource" destination="9Nl-Z6-Y85" id="HYW-gr-xUe"/>
                             <outlet property="delegate" destination="9Nl-Z6-Y85" id="ZkD-cO-exL"/>
@@ -39,7 +40,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" name="upperColor"/>
                         <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <color key="barTintColor" name="upperColor"/>
+                        <color key="barTintColor" name="lowerColor"/>
                         <textAttributes key="largeTitleTextAttributes">
                             <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                         </textAttributes>
@@ -62,6 +63,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" name="lowerColor"/>
                         <color key="tintColor" name="lowerColor"/>
+                        <color key="sectionIndexBackgroundColor" name="Color"/>
                         <connections>
                             <outlet property="dataSource" destination="sN7-Y8-PO1" id="66b-e3-Xkl"/>
                             <outlet property="delegate" destination="sN7-Y8-PO1" id="elE-e0-KU6"/>
@@ -99,9 +101,12 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ryP-Cl-fpP">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                                <color key="backgroundColor" name="lowerColor"/>
+                                <color key="tintColor" name="lowerColor"/>
                             </mapView>
                         </subviews>
-                        <color key="backgroundColor" name="upperColor"/>
+                        <color key="backgroundColor" name="lowerColor"/>
+                        <color key="tintColor" name="Color"/>
                         <constraints>
                             <constraint firstItem="Z0G-C0-8T7" firstAttribute="trailing" secondItem="ryP-Cl-fpP" secondAttribute="trailing" id="Fss-r1-3Wp"/>
                             <constraint firstItem="Z0G-C0-8T7" firstAttribute="bottom" secondItem="ryP-Cl-fpP" secondAttribute="bottom" id="PLG-9L-hyz"/>
@@ -123,6 +128,9 @@
     <resources>
         <image name="list.dash" catalog="system" width="64" height="42"/>
         <image name="map" catalog="system" width="64" height="56"/>
+        <namedColor name="Color">
+            <color red="0.1418065131" green="0.62263184790000003" blue="0.99947863820000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="lowerColor">
             <color red="0.37999999523162842" green="0.74500000476837158" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
