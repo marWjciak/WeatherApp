@@ -12,11 +12,12 @@
         <scene sceneID="n7E-d5-qP0">
             <objects>
                 <tableViewController id="9Nl-Z6-Y85" customClass="FiveDaysWeatherController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="LR9-TD-rv4">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="LR9-TD-rv4">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" name="lowerColor"/>
-                        <color key="tintColor" name="lowerColor"/>
+                        <color key="backgroundColor" name="Color"/>
+                        <color key="tintColor" name="Color"/>
+                        <color key="separatorColor" name="separatorColor"/>
                         <color key="sectionIndexBackgroundColor" name="Color"/>
                         <connections>
                             <outlet property="dataSource" destination="9Nl-Z6-Y85" id="HYW-gr-xUe"/>
@@ -58,11 +59,12 @@
         <scene sceneID="DuH-kD-f4N">
             <objects>
                 <tableViewController id="sN7-Y8-PO1" customClass="LocationWeatherViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="rAb-1h-mu2">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="rAb-1h-mu2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" name="lowerColor"/>
-                        <color key="tintColor" name="lowerColor"/>
+                        <color key="backgroundColor" name="Color"/>
+                        <color key="tintColor" name="Color"/>
+                        <color key="separatorColor" name="separatorColor"/>
                         <color key="sectionIndexBackgroundColor" name="Color"/>
                         <connections>
                             <outlet property="dataSource" destination="sN7-Y8-PO1" id="66b-e3-Xkl"/>
@@ -93,7 +95,6 @@
         <!--Map View Controller-->
         <scene sceneID="aD5-Tf-kib">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cqp-o6-G5r" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="CNK-8w-pMT" userLabel="Map View Controller" customClass="MapViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bjr-my-37t">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
@@ -105,13 +106,13 @@
                                 <color key="tintColor" name="lowerColor"/>
                             </mapView>
                         </subviews>
-                        <color key="backgroundColor" name="lowerColor"/>
+                        <color key="backgroundColor" name="Color"/>
                         <color key="tintColor" name="Color"/>
                         <constraints>
-                            <constraint firstItem="Z0G-C0-8T7" firstAttribute="trailing" secondItem="ryP-Cl-fpP" secondAttribute="trailing" id="Fss-r1-3Wp"/>
-                            <constraint firstItem="Z0G-C0-8T7" firstAttribute="bottom" secondItem="ryP-Cl-fpP" secondAttribute="bottom" id="PLG-9L-hyz"/>
-                            <constraint firstItem="ryP-Cl-fpP" firstAttribute="leading" secondItem="Z0G-C0-8T7" secondAttribute="leading" id="TzV-VA-sCt"/>
-                            <constraint firstItem="ryP-Cl-fpP" firstAttribute="top" secondItem="Z0G-C0-8T7" secondAttribute="top" id="nz1-q6-BwD"/>
+                            <constraint firstAttribute="trailing" secondItem="ryP-Cl-fpP" secondAttribute="trailing" id="Fss-r1-3Wp"/>
+                            <constraint firstAttribute="bottom" secondItem="ryP-Cl-fpP" secondAttribute="bottom" id="PLG-9L-hyz"/>
+                            <constraint firstItem="ryP-Cl-fpP" firstAttribute="leading" secondItem="bjr-my-37t" secondAttribute="leading" id="TzV-VA-sCt"/>
+                            <constraint firstItem="ryP-Cl-fpP" firstAttribute="top" secondItem="bjr-my-37t" secondAttribute="top" id="nz1-q6-BwD"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Z0G-C0-8T7"/>
                     </view>
@@ -121,6 +122,7 @@
                         <outlet property="mapView" destination="ryP-Cl-fpP" id="NpK-6f-h7q"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cqp-o6-G5r" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1951" y="1645"/>
         </scene>
@@ -129,10 +131,13 @@
         <image name="list.dash" catalog="system" width="64" height="42"/>
         <image name="map" catalog="system" width="64" height="56"/>
         <namedColor name="Color">
-            <color red="0.1418065131" green="0.62263184790000003" blue="0.99947863820000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.37999999523162842" green="0.74500000476837158" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="lowerColor">
             <color red="0.37999999523162842" green="0.74500000476837158" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="separatorColor">
+            <color red="0.14599999785423279" green="0.53299999237060547" blue="0.87400001287460327" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="upperColor">
             <color red="0.49300000071525574" green="0.81099998950958252" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

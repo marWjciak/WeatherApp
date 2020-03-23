@@ -48,6 +48,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         NotificationCenter.default.addObserver(self, selector: #selector(loadAllData), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.addLocationFromMap(_:)),
                                                name: NSNotification.Name(rawValue: "addLocationFromMap"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.removeLocation(_ :)), name: NSNotification.Name("removeLocation"), object: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -130,6 +131,23 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         }
     }
 
+    @objc private func removeLocation(_ notification: NSNotification) {
+        if let userData = notification.userInfo as NSDictionary? {
+            let cityName = userData["city"] as! String
+            print(cityName)
+
+            let indexToRemove = weatherData.firstIndex { data -> Bool in
+                data.cityName == cityName
+            }
+
+            if let index = indexToRemove {
+                removeSelectedCell(weatherData[index], index)
+            }
+
+            tableView.reloadData()
+        }
+    }
+
     // MARK: - Location Manager Delegate
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -155,7 +173,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             weatherData[0] = weather
 
         } else {
-            guard !containCity(weather.cityName) else { return }
+            guard !containCity(weather.cityName, weather.latitude, weather.longitude) else { return }
 
             if containsWeatherData(weather) {
                 if let cityIndex = locationWithIndexRow[weather.cityName] {
@@ -173,7 +191,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         saveUserData()
 
-        if !containCity("empty") {
+        if !containsCityName("empty") {
             DispatchQueue.main.async {
                 if self.refreshControl!.isRefreshing {
                     self.refreshControl?.endRefreshing()
@@ -186,10 +204,20 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         NotificationCenter.default.post(name: NSNotification.Name("reloadPinedLocations"), object: nil)
     }
 
-    private func containCity(_ cityName: String) -> Bool {
+    private func containCity(_ cityName: String, _ latitude: Double, _ longitude: Double) -> Bool {
+        return containsCityName(cityName) || containsCoordinates(latitude, longitude)
+    }
+
+    private func containsCityName(_ cityName: String) -> Bool {
         return weatherData.contains(where: { (data) -> Bool in
             data.cityName == cityName
         })
+    }
+
+    private func containsCoordinates(_ lat: Double, _ lon: Double) -> Bool {
+        return weatherData.contains { (data) -> Bool in
+            data.latitude == lat && data.longitude == lon
+        }
     }
 
     private func containsWeatherData(_ weather: WeatherModel) -> Bool {
@@ -218,7 +246,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             return 0
         }
 
-        return tableView.bounds.size.height / 4
+        return tableView.bounds.size.height / 5
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -233,7 +261,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                 if let indexPath = tableView.indexPathForSelectedRow {
                     destinationVC.forecasts = weatherData[indexPath.row]
                 }
-
             case K.LocationWeatherCell.listToMap:
                 UIView.transition(from: self.view,
                                   to: segue.destination.view,
@@ -272,7 +299,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
             let cellToRemove = self.weatherData[indexPath.row]
 
-            self.removeSelectedCell(cellToRemove, indexPath)
+            self.removeSelectedCell(cellToRemove, indexPath.row)
         }
 
         deleteAction.image = UIImage(systemName: "trash")
@@ -289,8 +316,8 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         return options
     }
 
-    func removeSelectedCell(_ cellToRemove: WeatherModel, _ indexPath: IndexPath) {
-        weatherData.remove(at: indexPath.row)
+    func removeSelectedCell(_ cellToRemove: WeatherModel, _ row: Int) {
+        weatherData.remove(at: row)
         locationWithIndexRow.removeValue(forKey: cellToRemove.cityName)
         saveUserData()
     }

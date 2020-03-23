@@ -52,7 +52,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
     }
 
-
     @objc private func back() {
         if let topView = navigationController?.viewControllers[0].view {
             UIView.transition(from: view,
@@ -61,49 +60,66 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                               options: UIView.AnimationOptions.transitionFlipFromRight,
                               completion: nil)
         }
-        navigationController?.popViewController(animated: false)
+        dismissView()
     }
 
     @objc private func longPressAction(longGesture: UILongPressGestureRecognizer) {
         let point = longGesture.location(in: mapView)
         let pointCoords = mapView.convert(point, toCoordinateFrom: mapView)
-        let coordData: [String : String] = ["lat" : String(pointCoords.latitude),
-                                            "long" : String(pointCoords.longitude)]
+        let coordData: [String: String] = ["lat": String(format: "%.6f", pointCoords.latitude),
+                                           "long": String(format: "%.6f", pointCoords.longitude)]
 
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "addLocationFromMap"), object: nil, userInfo: coordData)
-
     }
 
     @objc private func dismissView() {
-        self.navigationController?.popViewController(animated: false)
+        navigationController?.popViewController(animated: false)
     }
 
     // MARK: - Pin Methods
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let identifier = "Placemark"
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-
-        if annotationView == nil {
-            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            annotationView?.canShowCallout = true
-
-        } else {
-            annotationView?.annotation = annotation
-        }
-
         let forecastAnnotation = annotation as! ForecastPin
-        if let safeImage = forecastAnnotation.image {
-            let annotationImage = UIImage(systemName: safeImage)?
-                .withConfiguration(UIImage.SymbolConfiguration(weight: .regular))
-                .withTintColor(K.color, renderingMode: .alwaysTemplate)
-            let size = CGSize(width: 40, height: 40)
-            annotationView?.image = UIGraphicsImageRenderer(size: size).image { _ in
-                annotationImage?.draw(in: CGRect(origin: .zero, size: size))
-            }
-        }
 
-        return annotationView
+        if let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) {
+            annotationView.annotation = forecastAnnotation
+
+            return annotationView
+        } else {
+            let annotationView = MKPinAnnotationView(annotation: forecastAnnotation, reuseIdentifier: identifier)
+            annotationView.canShowCallout = true
+            annotationView.isEnabled = true
+
+            if let safeImage = forecastAnnotation.image {
+                let annotationImage = UIImage(systemName: safeImage)?
+                    .withConfiguration(UIImage.SymbolConfiguration(weight: .regular))
+                    .withTintColor(K.color, renderingMode: .alwaysTemplate)
+                let size = CGSize(width: 40, height: 40)
+                annotationView.image = UIGraphicsImageRenderer(size: size).image { _ in
+                    annotationImage?.draw(in: CGRect(origin: .zero, size: size))
+                }
+            }
+
+            let removeButton = AnnotationButton(type: .custom)
+            removeButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+            removeButton.setImage(UIImage(systemName: "trash"), for: .normal)
+            removeButton.tintColor = .red
+            removeButton.addTarget(self, action: #selector(removeAnnotation), for: .touchDown)
+            removeButton.annotation = annotation
+            annotationView.rightCalloutAccessoryView = removeButton
+
+            return annotationView
+        }
+    }
+
+    @objc private func removeAnnotation(sender: AnnotationButton) {
+        guard let annotation = sender.annotation else { return }
+        let cityName = annotation.title
+
+        mapView.removeAnnotation(annotation)
+
+        NotificationCenter.default.post(name: NSNotification.Name("removeLocation"), object: nil, userInfo: ["city" : cityName as Any])
     }
 
     private func addPoint(with coortinate: CLLocationCoordinate2D, _ title: String, _ subtitle: String, _ image: String) {
@@ -135,7 +151,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 addPoint(with: _currentLocation.coordinate, "Current Location", String(forecast.temp), forecast.icon)
             } else {
                 guard let _lat = lat, let _lon = lon else { return }
-                self.addPoint(with: CLLocationCoordinate2D(latitude: _lat, longitude: _lon), city, String(forecast.temp), forecast.icon)
+                addPoint(with: CLLocationCoordinate2D(latitude: _lat, longitude: _lon), city, String(forecast.temp), forecast.icon)
             }
         }
     }

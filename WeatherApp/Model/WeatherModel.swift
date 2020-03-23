@@ -73,8 +73,8 @@ import SwiftyJSON
 
 class WeatherModel: Codable {
     let cityName: String
-    let latitude: Double
-    let longitude: Double
+    var latitude: Double
+    var longitude: Double
     var dayForecasts: [DayForecast]
     var fromLocation: Bool
 

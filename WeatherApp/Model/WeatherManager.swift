@@ -23,12 +23,14 @@ struct WeatherManager {
         
         let URL = rawURL + "&q=\(cityNameForRequest)"
         
-        performWeatherRequest(with: URL, fromLocation: false)
+        performWeatherRequest(with: URL, fromLocation: false, latitude: 0, longitude: 0)
     }
     
     func fetchWeatherData(latitude: String, longitude: String, fromLocation: Bool) {
         let urlString = "\(rawURL)&lat=\(latitude)&lon=\(longitude)"
-        performWeatherRequest(with: urlString, fromLocation: fromLocation)
+        if let lat = Double(latitude), let lon = Double(longitude) {
+            performWeatherRequest(with: urlString, fromLocation: fromLocation, latitude: lat, longitude: lon)
+        }
     }
     
     private func prepareNameToRequest(for cityName: String) -> String {
@@ -38,13 +40,18 @@ struct WeatherManager {
         return removedDiacritics
     }
     
-    private func performWeatherRequest(with url: String, fromLocation: Bool) {
+    private func performWeatherRequest(with url: String, fromLocation: Bool, latitude: Double, longitude: Double) {
         Alamofire.request(url).response { responseData in
             
             if let weatherData = responseData.data {
                 let responseModel = WeatherResponse(data: weatherData, fromLocation: fromLocation)
                 guard let weatherModel = responseModel.parseJSON() else {
                     return
+                }
+
+                if latitude != 0 && longitude != 0 {
+                    weatherModel.latitude = latitude
+                    weatherModel.longitude = longitude
                 }
                 
                 self.delegate?.weatherDataDidUpdate(self, weather: weatherModel)
