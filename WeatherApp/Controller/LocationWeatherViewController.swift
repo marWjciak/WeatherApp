@@ -11,10 +11,11 @@ import Network
 import SwipeCellKit
 import UIKit
 
-class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate, UITableViewDragDelegate {
+class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate, UITableViewDragDelegate, ForecastPinManagerDelegate {
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
     var weatherManager = WeatherManager()
+    var forecastPinManager = ForecastPinManager()
 
     var userLocations = [String]()
     var weatherData = [WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: true)]
@@ -35,6 +36,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         defineNetworkStatusControllers()
 
         weatherManager.delegate = self
+        forecastPinManager.delegate = self
 
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
@@ -46,8 +48,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         tableView.dragDelegate = self
 
         NotificationCenter.default.addObserver(self, selector: #selector(loadAllData), name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.addLocationFromMap(_:)),
-                                               name: NSNotification.Name(rawValue: "addLocationFromMap"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.removeLocation(_ :)), name: NSNotification.Name("removeLocation"), object: nil)
     }
 
@@ -201,7 +201,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
             tableView.reloadData()
         }
-        NotificationCenter.default.post(name: NSNotification.Name("reloadPinedLocations"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name("addPoint"), object: nil, userInfo: ["pin" : weather])
     }
 
     private func containCity(_ cityName: String, _ latitude: Double, _ longitude: Double) -> Bool {
@@ -437,5 +437,13 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                 }
             }
         }
+    }
+
+    //MARK: - Forecast Pin Delegate
+
+    func newLocationDidAdd(_: ForecastPinManager, with coords: CLLocationCoordinate2D) {
+        let lat = String(coords.latitude)
+        let lon = String(coords.longitude)
+        weatherManager.fetchWeatherData(latitude: lat, longitude: lon, fromLocation: false)
     }
 }

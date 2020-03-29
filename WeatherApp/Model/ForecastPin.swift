@@ -11,12 +11,14 @@ import MapKit
 
 class ForecastPin: MKPointAnnotation {
     var image: String?
+    var button: UIButton?
 
-    init(title: String, subtitle: String, coordinate: CLLocationCoordinate2D, image: String) {
+    init(title: String, subtitle: String, coordinate: CLLocationCoordinate2D, image: String, button: UIButton? = nil) {
         super.init()
         super.title = title
         super.subtitle = subtitle
         super.coordinate = coordinate
         self.image = image
+        self.button = button
     }
 }
