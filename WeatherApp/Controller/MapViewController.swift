@@ -10,7 +10,7 @@ import CoreLocation
 import Foundation
 import MapKit
 
-class MapViewController: UIViewController, MKMapViewDelegate {
+class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDelegate {
     @IBOutlet var mapView: MKMapView!
 
     let regionRadius: CLLocationDistance = 1000
@@ -18,10 +18,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     var locationList: [String]?
     var weatherData: [WeatherModel]?
     let forecastPinManager = ForecastPinManager()
+    var weatherManager = Locations.shared.weatherManager
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+//        weatherManager.delegates.add(delegate: self)
         mapView.delegate = self
         navigationItem.hidesBackButton = true
         let backButton = UIBarButtonItem(image: UIImage(systemName: "list.dash"), style: .plain, target: self, action: #selector(back))
@@ -68,7 +70,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let point = longGesture.location(in: mapView)
         let pointCoords = mapView.convert(point, toCoordinateFrom: mapView)
 
-        forecastPinManager.addLocationOnMap(coordinates: CLLocationCoordinate2D(latitude: pointCoords.latitude, longitude: pointCoords.longitude))
+//        forecastPinManager.addLocationOnMap(coordinates: CLLocationCoordinate2D(latitude: pointCoords.latitude, longitude: pointCoords.longitude))
+        weatherManager.fetchWeatherData(latitude: String(pointCoords.latitude), longitude: String(pointCoords.longitude), fromLocation: false)
     }
 
     @objc private func dismissView() {
@@ -156,5 +159,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 completitionHandler(placemark)
             }
         }
+    }
+
+    //MARK: - Weather Manager Delegate
+
+    func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel) {
+        guard let annotation = forecastPinManager.createForecastAnnotation(for: weather) else { return }
+        mapView.addAnnotation(annotation)
     }
 }

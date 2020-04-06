@@ -10,7 +10,7 @@ import Alamofire
 import Foundation
 import SwiftyJSON
 
-protocol WeatherManagerDelegate {
+protocol WeatherManagerDelegate: class {
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel)
 }
 

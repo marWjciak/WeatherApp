@@ -14,7 +14,7 @@ import UIKit
 class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate, UITableViewDragDelegate, ForecastPinManagerDelegate {
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
-    var weatherManager = WeatherManager()
+    var weatherManager = Locations.shared.weatherManager
     var forecastPinManager = ForecastPinManager()
 
     var userLocations = [String]()
@@ -35,7 +35,12 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         turnOnNetworkMonitor()
         defineNetworkStatusControllers()
 
-        weatherManager.delegate = self
+//        let mapViewController = storyboard?.instantiateViewController(withIdentifier: "MapViewControllerID") as! MapViewController
+//        mapViewController.weatherManager = self.weatherManager
+//        mapViewController.weatherData = self.weatherData
+        let delegate = WeatherManagerMulticastDelegate([self])
+        weatherManager.delegate = delegate
+
         forecastPinManager.delegate = self
 
         locationManager.requestWhenInUseAuthorization()
@@ -48,7 +53,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         tableView.dragDelegate = self
 
         NotificationCenter.default.addObserver(self, selector: #selector(loadAllData), name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.removeLocation(_ :)), name: NSNotification.Name("removeLocation"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(removeLocation(_:)), name: NSNotification.Name("removeLocation"), object: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -125,7 +130,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
     @objc private func addLocationFromMap(_ notification: NSNotification) {
         if let coords = notification.userInfo as NSDictionary? {
-            if let latitude = coords["lat"] as? String, let longitude = coords["long"] as? String{
+            if let latitude = coords["lat"] as? String, let longitude = coords["long"] as? String {
                 weatherManager.fetchWeatherData(latitude: latitude, longitude: longitude, fromLocation: false)
             }
         }
@@ -201,7 +206,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
             tableView.reloadData()
         }
-        NotificationCenter.default.post(name: NSNotification.Name("addPoint"), object: nil, userInfo: ["pin" : weather])
+        NotificationCenter.default.post(name: NSNotification.Name("addPoint"), object: nil, userInfo: ["pin": weather])
     }
 
     private func containCity(_ cityName: String, _ latitude: Double, _ longitude: Double) -> Bool {
@@ -262,11 +267,11 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                     destinationVC.forecasts = weatherData[indexPath.row]
                 }
             case K.LocationWeatherCell.listToMap:
-                UIView.transition(from: self.view,
+                UIView.transition(from: view,
                                   to: segue.destination.view,
-                                          duration: 0.5,
-                                          options: UIView.AnimationOptions.transitionFlipFromLeft,
-                                          completion: nil)
+                                  duration: 0.5,
+                                  options: UIView.AnimationOptions.transitionFlipFromLeft,
+                                  completion: nil)
             default:
                 return
         }
@@ -439,7 +444,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         }
     }
 
-    //MARK: - Forecast Pin Delegate
+    // MARK: - Forecast Pin Delegate
 
     func newLocationDidAdd(_: ForecastPinManager, with coords: CLLocationCoordinate2D) {
         let lat = String(coords.latitude)

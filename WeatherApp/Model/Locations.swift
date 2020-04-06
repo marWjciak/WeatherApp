@@ -14,6 +14,7 @@ class Locations {
     var array: [String]?
     var currentLocation: CLLocation?
     var globalWeatherData: [WeatherModel]?
+    var weatherManager = WeatherManager()
 }
 
 class boxLocation<T> {
