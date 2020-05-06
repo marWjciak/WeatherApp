@@ -11,15 +11,20 @@ import Network
 import SwipeCellKit
 import UIKit
 
-class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate, UITableViewDragDelegate {
+class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate, UITableViewDragDelegate, ForecastPinManagerDelegate {
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
-    var weatherManager = WeatherManager()
+    var weatherManager = Locations.shared.weatherManager
+    var forecastPinManager = ForecastPinManager()
 
     var userLocations = [String]()
     var weatherData = [WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: true)]
     var locationWithIndexRow: [String: Int] = [:]
     var isLoaded = false
+
+    @IBAction func mapButtonAction(_ sender: UIBarButtonItem) {
+        performSegue(withIdentifier: K.LocationWeatherCell.listToMap, sender: self)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +35,9 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         turnOnNetworkMonitor()
         defineNetworkStatusControllers()
 
-        weatherManager.delegate = self
+        weatherManager.delegates.add(delegate: self)
+
+        forecastPinManager.delegate = self
 
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
@@ -125,8 +132,9 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         let lat = String(location.coordinate.latitude)
         let lon = String(location.coordinate.longitude)
+        Locations.shared.currentLocation = location
 
-        weatherManager.fetchWeatherData(latitude: lat, longitude: lon)
+        weatherManager.fetchWeatherData(latitude: lat, longitude: lon, fromLocation: true)
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -140,7 +148,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             weatherData[0] = weather
 
         } else {
-            guard !containCity(weather.cityName) else { return }
+            guard !containCity(weather.cityName, weather.latitude, weather.longitude) else { return }
 
             if containsWeatherData(weather) {
                 if let cityIndex = locationWithIndexRow[weather.cityName] {
@@ -158,7 +166,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         saveUserData()
 
-        if !containCity("empty") {
+        if !containsCityName("empty") {
             DispatchQueue.main.async {
                 if self.refreshControl!.isRefreshing {
                     self.refreshControl?.endRefreshing()
@@ -170,10 +178,34 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         }
     }
 
-    private func containCity(_ cityName: String) -> Bool {
+    func weatherDataDidRemove(_: WeatherManager, location: String) {
+        print("\(location) removed")
+
+        let indexToRemove = weatherData.firstIndex { data -> Bool in
+            data.cityName == location
+        }
+
+        if let index = indexToRemove {
+            removeSelectedCell(weatherData[index], index)
+        }
+
+        tableView.reloadData()
+    }
+
+    private func containCity(_ cityName: String, _ latitude: Double, _ longitude: Double) -> Bool {
+        return containsCityName(cityName) || containsCoordinates(latitude, longitude)
+    }
+
+    private func containsCityName(_ cityName: String) -> Bool {
         return weatherData.contains(where: { (data) -> Bool in
             data.cityName == cityName
         })
+    }
+
+    private func containsCoordinates(_ lat: Double, _ lon: Double) -> Bool {
+        return weatherData.contains { (data) -> Bool in
+            data.latitude == lat && data.longitude == lon
+        }
     }
 
     private func containsWeatherData(_ weather: WeatherModel) -> Bool {
@@ -202,7 +234,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             return 0
         }
 
-        return tableView.bounds.size.height / 4
+        return tableView.bounds.size.height / 5
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -210,10 +242,21 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let destinationVC = segue.destination as! FiveDaysWeatherController
+        switch segue.identifier {
+            case K.LocationWeatherCell.cellDetailsSegue:
+                let destinationVC = segue.destination as! FiveDaysWeatherController
 
-        if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.forecasts = weatherData[indexPath.row]
+                if let indexPath = tableView.indexPathForSelectedRow {
+                    destinationVC.forecasts = weatherData[indexPath.row]
+                }
+            case K.LocationWeatherCell.listToMap:
+                UIView.transition(from: view,
+                                  to: segue.destination.view,
+                                  duration: 0.5,
+                                  options: UIView.AnimationOptions.transitionFlipFromLeft,
+                                  completion: nil)
+            default:
+                return
         }
     }
 
@@ -244,7 +287,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
             let cellToRemove = self.weatherData[indexPath.row]
 
-            self.removeSelectedCell(cellToRemove, indexPath)
+            self.removeSelectedCell(cellToRemove, indexPath.row)
         }
 
         deleteAction.image = UIImage(systemName: "trash")
@@ -261,8 +304,8 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         return options
     }
 
-    func removeSelectedCell(_ cellToRemove: WeatherModel, _ indexPath: IndexPath) {
-        weatherData.remove(at: indexPath.row)
+    func removeSelectedCell(_ cellToRemove: WeatherModel, _ row: Int) {
+        weatherData.remove(at: row)
         locationWithIndexRow.removeValue(forKey: cellToRemove.cityName)
         saveUserData()
     }
@@ -300,7 +343,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         weatherData = [WeatherModel](repeating: WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: false), count: userLocations.count + 1)
         weatherData[0] = WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: true)
-        print(userLocations)
 
         locationWithIndexRow = getLocationIndexes(userLocations: userLocations)
 
@@ -319,6 +361,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
         }
 
+        Locations.shared.globalWeatherData = weatherData
         userDefaults.set(userLocations, forKey: K.userLocationsKey)
     }
 
@@ -382,5 +425,13 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
                 }
             }
         }
+    }
+
+    // MARK: - Forecast Pin Delegate
+
+    func newLocationDidAdd(_: ForecastPinManager, with coords: CLLocationCoordinate2D) {
+        let lat = String(coords.latitude)
+        let lon = String(coords.longitude)
+        weatherManager.fetchWeatherData(latitude: lat, longitude: lon, fromLocation: false)
     }
 }

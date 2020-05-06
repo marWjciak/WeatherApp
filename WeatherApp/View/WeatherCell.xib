@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,10 +17,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="475" height="80"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="8b7-9U-aQF">
-                        <rect key="frame" x="0.0" y="0.0" width="475" height="80"/>
-                        <color key="tintColor" red="0.4397089481" green="0.78461295369999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="21" textAlignment="right" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="QjZ-d7-rTC" userLabel="Temperature Label">
                         <rect key="frame" x="120" y="10" width="35.5" height="60"/>
                         <fontDescription key="fontDescription" type="system" weight="black" pointSize="30"/>
@@ -67,31 +64,30 @@
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
+                <color key="backgroundColor" name="Color"/>
+                <color key="tintColor" name="Color"/>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="QjZ-d7-rTC" secondAttribute="bottom" constant="10" id="3Mg-V8-6rQ"/>
                     <constraint firstAttribute="trailing" secondItem="inB-tJ-lo1" secondAttribute="trailing" constant="10" id="7OC-vF-RWa"/>
                     <constraint firstItem="q82-lz-rtF" firstAttribute="top" relation="greaterThanOrEqual" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="AzW-n9-P8z"/>
                     <constraint firstAttribute="trailing" secondItem="2XT-g2-XRi" secondAttribute="trailing" constant="10" id="Dre-en-0pe"/>
                     <constraint firstItem="QjZ-d7-rTC" firstAttribute="centerY" secondItem="qgO-iF-80P" secondAttribute="centerY" id="FRv-Tq-OiF"/>
-                    <constraint firstItem="8b7-9U-aQF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="GuD-bu-0Bv"/>
                     <constraint firstItem="tM4-cM-bv8" firstAttribute="centerY" secondItem="4HY-FS-HI6" secondAttribute="centerY" id="L84-jn-d6G"/>
                     <constraint firstItem="qgO-iF-80P" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="P3J-JM-nHN"/>
                     <constraint firstAttribute="bottom" secondItem="qgO-iF-80P" secondAttribute="bottom" constant="10" id="U6M-pk-4VJ"/>
                     <constraint firstItem="tM4-cM-bv8" firstAttribute="leading" secondItem="4HY-FS-HI6" secondAttribute="trailing" id="WZT-iX-EWI"/>
                     <constraint firstItem="4HY-FS-HI6" firstAttribute="centerY" secondItem="QjZ-d7-rTC" secondAttribute="centerY" id="aNj-rp-y1D"/>
                     <constraint firstItem="QjZ-d7-rTC" firstAttribute="leading" secondItem="qgO-iF-80P" secondAttribute="trailing" constant="50" id="aYY-a1-UCX"/>
-                    <constraint firstAttribute="bottom" secondItem="8b7-9U-aQF" secondAttribute="bottom" id="ajc-nP-j7N"/>
                     <constraint firstAttribute="bottom" secondItem="inB-tJ-lo1" secondAttribute="bottom" constant="10" id="dpw-i2-uM5"/>
                     <constraint firstItem="inB-tJ-lo1" firstAttribute="top" secondItem="2XT-g2-XRi" secondAttribute="bottom" constant="1" id="e5V-4N-2s3"/>
                     <constraint firstItem="qgO-iF-80P" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="ehF-Z9-0t0"/>
-                    <constraint firstAttribute="trailing" secondItem="8b7-9U-aQF" secondAttribute="trailing" id="oh1-Fc-MEJ"/>
-                    <constraint firstItem="8b7-9U-aQF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="otA-78-Mnb"/>
                     <constraint firstItem="4HY-FS-HI6" firstAttribute="leading" secondItem="QjZ-d7-rTC" secondAttribute="trailing" constant="1" id="rXW-Vn-UJl"/>
                     <constraint firstAttribute="trailing" secondItem="q82-lz-rtF" secondAttribute="trailing" constant="10" id="rgz-0g-tEp"/>
                     <constraint firstItem="QjZ-d7-rTC" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="rtj-u4-7a3"/>
                     <constraint firstItem="2XT-g2-XRi" firstAttribute="top" secondItem="q82-lz-rtF" secondAttribute="bottom" constant="1" id="yPi-XW-cIG"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" name="Color"/>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="weatherDate" destination="2XT-g2-XRi" id="2si-9j-yJ9"/>
@@ -104,7 +100,9 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="background" width="256" height="341"/>
-        <image name="sun.max" catalog="system" width="64" height="62"/>
+        <image name="sun.max" catalog="system" width="128" height="124"/>
+        <namedColor name="Color">
+            <color red="0.37999999523162842" green="0.74500000476837158" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

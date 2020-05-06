@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -12,18 +12,18 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreen" translatesAutoresizingMaskIntoConstraints="NO" id="Jw7-yY-2xQ">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="Jw7-yY-2xQ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="UKw-Ht-zP5"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Jw7-yY-2xQ" secondAttribute="trailing" id="efc-g1-i7t"/>
-                            <constraint firstItem="Jw7-yY-2xQ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="kyF-KB-gwy"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Jw7-yY-2xQ" secondAttribute="bottom" id="mzD-Qz-1J3"/>
+                            <constraint firstItem="Jw7-yY-2xQ" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="UKw-Ht-zP5"/>
+                            <constraint firstAttribute="trailing" secondItem="Jw7-yY-2xQ" secondAttribute="trailing" id="efc-g1-i7t"/>
+                            <constraint firstItem="Jw7-yY-2xQ" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="kyF-KB-gwy"/>
+                            <constraint firstAttribute="bottom" secondItem="Jw7-yY-2xQ" secondAttribute="bottom" id="mzD-Qz-1J3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -34,6 +34,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LaunchScreen" width="256" height="341"/>
+        <image name="LaunchScreen" width="256" height="341.33334350585938"/>
     </resources>
 </document>

@@ -11,6 +11,7 @@ import UIKit
 
 struct K {
     static let userLocationsKey = "UserLocations"
+    static let currentLocation = "Current Location"
     static let emptyCityName = "empty"
 
     static var color = UIColor { (traitCollection) -> UIColor in
@@ -31,6 +32,7 @@ struct K {
         static let nibName = "LocationWeatherCell"
         static let identifier = "LocationWeatherCell"
         static let cellDetailsSegue = "mainToDetailWeather"
+        static let listToMap = "fromListToMap"
     }
 
     struct Assets {
