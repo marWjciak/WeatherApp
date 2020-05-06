@@ -14,11 +14,11 @@ import UIKit
 class LocationWeatherViewController: UITableViewController, CLLocationManagerDelegate, WeatherManagerDelegate, SwipeTableViewCellDelegate, UITableViewDragDelegate, ForecastPinManagerDelegate {
     let userDefaults = UserDefaults.standard
     let locationManager = CLLocationManager()
-    var weatherManager = Locations.shared.weatherManager
+    var weatherManager = WeatherData.shared.weatherManager
     var forecastPinManager = ForecastPinManager()
 
     var userLocations = [String]()
-    var weatherData = [WeatherModel(cityName: K.emptyCityName, dayForecasts: [], fromLocation: true)]
+    var weatherData = [WeatherModel]()
     var locationWithIndexRow: [String: Int] = [:]
     var isLoaded = false
 
@@ -48,7 +48,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         tableView.dragInteractionEnabled = true
         tableView.dragDelegate = self
 
-        NotificationCenter.default.addObserver(self, selector: #selector(loadAllData), name: UIApplication.willEnterForegroundNotification, object: nil)
+        initializeNotifications()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -132,7 +132,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
         let lat = String(location.coordinate.latitude)
         let lon = String(location.coordinate.longitude)
-        Locations.shared.currentLocation = location
+        WeatherData.shared.currentLocation = location
 
         weatherManager.fetchWeatherData(latitude: lat, longitude: lon, fromLocation: true)
     }
@@ -361,7 +361,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
         }
 
-        Locations.shared.globalWeatherData = weatherData
+        WeatherData.shared.globalWeatherData = weatherData
         userDefaults.set(userLocations, forKey: K.userLocationsKey)
     }
 
@@ -433,5 +433,11 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         let lat = String(coords.latitude)
         let lon = String(coords.longitude)
         weatherManager.fetchWeatherData(latitude: lat, longitude: lon, fromLocation: false)
+    }
+
+    //MARK: - Initialize Notifications
+
+    func initializeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(loadAllData), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 }

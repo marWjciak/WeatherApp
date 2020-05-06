@@ -23,11 +23,13 @@ class WeatherCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
 
-    func configureFor(_ weatherData: DayForecast!) {
-        weatherIcon.image = UIImage(systemName: weatherData?.icon ?? "")
-        weatherTemp.text = String(weatherData?.temp ?? 0)
-        weatherDescription.text = weatherData?.description ?? ""
-        weatherDate.text = weatherData?.formattedDate
-        weatherTime.text = weatherData?.formattedTime
+    func configureFor(_ weatherData: DayForecast?) {
+        if let safeWeatherData = weatherData {
+            weatherIcon.image = UIImage(systemName: safeWeatherData.icon)
+            weatherTemp.text = String(safeWeatherData.temp)
+            weatherDescription.text = safeWeatherData.description
+            weatherDate.text = safeWeatherData.formattedDate
+            weatherTime.text = safeWeatherData.formattedTime
+        }
     }
 }

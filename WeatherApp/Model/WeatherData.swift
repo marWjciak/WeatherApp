@@ -9,12 +9,12 @@
 import Foundation
 import CoreLocation
 
-
-
 class WeatherData {
     static let shared = WeatherData()
 
     var currentLocation: CLLocation?
     var globalWeatherData: [WeatherModel]?
     var weatherManager = WeatherManager()
+
+    private init() { }
 }
