@@ -12,11 +12,18 @@ import SwiftyJSON
 
 protocol WeatherManagerDelegate: class {
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel)
+    func weatherDataDidRemove(_: WeatherManager, location: String)
+}
+
+extension WeatherManagerDelegate {
+    func weatherDataDidRemove(_: WeatherManager, location: String) {
+        // this is an empty implementation to allow method to be optional
+    }
 }
 
 let rawURL = "https://api.openweathermap.org/data/2.5/forecast?appid=ae70447edd3ebdbaca972a829ab5765c&units=metric" //&lang=pl"
-struct WeatherManager {
-    var delegate: WeatherManagerDelegate?
+class WeatherManager {
+    var delegates = MulticastDelegate<WeatherManagerDelegate>()
     
     func fetchWeatherData(for city: String) {
         let cityNameForRequest = prepareNameToRequest(for: city)
@@ -31,6 +38,10 @@ struct WeatherManager {
         if let lat = Double(latitude), let lon = Double(longitude) {
             performWeatherRequest(with: urlString, fromLocation: fromLocation, latitude: lat, longitude: lon)
         }
+    }
+
+    func removeWeatherData(for data: String) {
+        delegates.invoke(invocation: { delegate in delegate.weatherDataDidRemove(self, location: data) })
     }
     
     private func prepareNameToRequest(for cityName: String) -> String {
@@ -53,8 +64,8 @@ struct WeatherManager {
                     weatherModel.latitude = latitude
                     weatherModel.longitude = longitude
                 }
-                
-                self.delegate?.weatherDataDidUpdate(self, weather: weatherModel)
+
+                self.delegates.invoke(invocation: { delegate in delegate.weatherDataDidUpdate(self, weather: weatherModel) })
             }
         }
     }

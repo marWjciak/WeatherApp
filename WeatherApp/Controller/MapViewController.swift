@@ -23,14 +23,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        weatherManager.delegates.add(delegate: self)
+        weatherManager.delegates.add(delegate: self)
         mapView.delegate = self
         navigationItem.hidesBackButton = true
-        let backButton = UIBarButtonItem(image: UIImage(systemName: "list.dash"), style: .plain, target: self, action: #selector(back))
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "list.dash"), style: .plain, target: self, action: #selector(backToLocationList))
         navigationItem.leftBarButtonItem = backButton
 
         NotificationCenter.default.addObserver(self, selector: #selector(dismissView), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(addPoint(_:)), name: NSNotification.Name("addPoint"), object: nil)
 
         let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(longGesture:)))
         mapView.addGestureRecognizer(longGesture)
@@ -55,7 +54,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
         }
     }
 
-    @objc private func back() {
+    @objc private func backToLocationList() {
         if let topView = navigationController?.viewControllers[0].view {
             UIView.transition(from: view,
                               to: topView,
@@ -70,7 +69,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
         let point = longGesture.location(in: mapView)
         let pointCoords = mapView.convert(point, toCoordinateFrom: mapView)
 
-//        forecastPinManager.addLocationOnMap(coordinates: CLLocationCoordinate2D(latitude: pointCoords.latitude, longitude: pointCoords.longitude))
         weatherManager.fetchWeatherData(latitude: String(pointCoords.latitude), longitude: String(pointCoords.longitude), fromLocation: false)
     }
 
@@ -115,12 +113,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
         guard let annotation = view.annotation else { return }
         if let cityName = annotation.title {
             mapView.removeAnnotation(annotation)
-
-            NotificationCenter.default.post(name: NSNotification.Name("removeLocation"), object: nil, userInfo: ["city": cityName as Any])
+            weatherManager.removeWeatherData(for: cityName ?? "nil")
         }
     }
 
-    @objc private func addSavedLocations() {
+    private func addSavedLocations() {
         mapView.removeAnnotations(mapView.annotations)
         weatherData = boxLocation(Locations.shared.globalWeatherData).value
         forecastPinManager.delegate = navigationController?.viewControllers[0] as! LocationWeatherViewController
@@ -134,15 +131,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
         }
     }
 
-    @objc private func loadAllLocations() {
+    private func loadAllLocations() {
         addSavedLocations()
         centerMapOnCurrentLocation()
-    }
-
-    @objc private func addPoint(_ notification: NSNotification) {
-        let weather = notification.userInfo?["pin"] as! WeatherModel
-        guard let annotation = forecastPinManager.createForecastAnnotation(for: weather) else { return }
-        mapView.addAnnotation(annotation)
     }
 
     // MARK: - Location

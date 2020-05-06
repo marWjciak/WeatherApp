@@ -35,11 +35,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         turnOnNetworkMonitor()
         defineNetworkStatusControllers()
 
-//        let mapViewController = storyboard?.instantiateViewController(withIdentifier: "MapViewControllerID") as! MapViewController
-//        mapViewController.weatherManager = self.weatherManager
-//        mapViewController.weatherData = self.weatherData
-        let delegate = WeatherManagerMulticastDelegate([self])
-        weatherManager.delegate = delegate
+        weatherManager.delegates.add(delegate: self)
 
         forecastPinManager.delegate = self
 
@@ -53,7 +49,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         tableView.dragDelegate = self
 
         NotificationCenter.default.addObserver(self, selector: #selector(loadAllData), name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(removeLocation(_:)), name: NSNotification.Name("removeLocation"), object: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -128,31 +123,6 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
         present(alert, animated: true, completion: nil)
     }
 
-    @objc private func addLocationFromMap(_ notification: NSNotification) {
-        if let coords = notification.userInfo as NSDictionary? {
-            if let latitude = coords["lat"] as? String, let longitude = coords["long"] as? String {
-                weatherManager.fetchWeatherData(latitude: latitude, longitude: longitude, fromLocation: false)
-            }
-        }
-    }
-
-    @objc private func removeLocation(_ notification: NSNotification) {
-        if let userData = notification.userInfo as NSDictionary? {
-            let cityName = userData["city"] as! String
-            print(cityName)
-
-            let indexToRemove = weatherData.firstIndex { data -> Bool in
-                data.cityName == cityName
-            }
-
-            if let index = indexToRemove {
-                removeSelectedCell(weatherData[index], index)
-            }
-
-            tableView.reloadData()
-        }
-    }
-
     // MARK: - Location Manager Delegate
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -206,7 +176,20 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }
             tableView.reloadData()
         }
-        NotificationCenter.default.post(name: NSNotification.Name("addPoint"), object: nil, userInfo: ["pin": weather])
+    }
+
+    func weatherDataDidRemove(_: WeatherManager, location: String) {
+        print("\(location) removed")
+
+        let indexToRemove = weatherData.firstIndex { data -> Bool in
+            data.cityName == location
+        }
+
+        if let index = indexToRemove {
+            removeSelectedCell(weatherData[index], index)
+        }
+
+        tableView.reloadData()
     }
 
     private func containCity(_ cityName: String, _ latitude: Double, _ longitude: Double) -> Bool {
