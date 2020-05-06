@@ -35,7 +35,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
         mapView.addGestureRecognizer(longGesture)
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_: Bool) {
         currentLocation = Locations.shared.currentLocation
         weatherData = boxLocation(Locations.shared.globalWeatherData).value
 
@@ -127,7 +127,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
 
         for location in locations {
             guard let annotation = forecastPinManager.createForecastAnnotation(for: location) else { return }
-            mapView.addAnnotation(annotation)
+
+            if !viewContains(annotation) {
+                mapView.addAnnotation(annotation)
+            }
         }
     }
 
@@ -152,10 +155,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
         }
     }
 
-    //MARK: - Weather Manager Delegate
+    // MARK: - Weather Manager Delegate
 
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel) {
         guard let annotation = forecastPinManager.createForecastAnnotation(for: weather) else { return }
-        mapView.addAnnotation(annotation)
+
+        if !viewContains(annotation) {
+            mapView.addAnnotation(annotation)
+        }
+    }
+
+    private func viewContains(_ pin: ForecastPin) -> Bool {
+        return mapView.annotations.contains(where: { place in place.title == pin.title })
     }
 }
