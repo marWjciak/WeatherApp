@@ -18,7 +18,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
     var locationList: [String]?
     var weatherData: [WeatherModel]?
     let forecastPinManager = ForecastPinManager()
-    var weatherManager = Locations.shared.weatherManager
+    var weatherManager = WeatherData.shared.weatherManager
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,15 +29,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
         let backButton = UIBarButtonItem(image: UIImage(systemName: "list.dash"), style: .plain, target: self, action: #selector(backToLocationList))
         navigationItem.leftBarButtonItem = backButton
 
-        NotificationCenter.default.addObserver(self, selector: #selector(dismissView), name: UIApplication.didEnterBackgroundNotification, object: nil)
-
         let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(longGesture:)))
         mapView.addGestureRecognizer(longGesture)
+
+        initializeNotifications()
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        currentLocation = Locations.shared.currentLocation
-        weatherData = boxLocation(Locations.shared.globalWeatherData).value
+        currentLocation = WeatherData.shared.currentLocation
+        weatherData = WeatherData.shared.globalWeatherData
 
         loadAllLocations()
     }
@@ -119,7 +119,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
 
     private func addSavedLocations() {
         mapView.removeAnnotations(mapView.annotations)
-        weatherData = boxLocation(Locations.shared.globalWeatherData).value
+        weatherData = WeatherData.shared.globalWeatherData
         forecastPinManager.delegate = navigationController?.viewControllers[0] as! LocationWeatherViewController
         guard let locations = weatherData, !locations.contains(where: { (location) -> Bool in
             location.cityName == "empty"
@@ -127,7 +127,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
 
         for location in locations {
             guard let annotation = forecastPinManager.createForecastAnnotation(for: location) else { return }
-            mapView.addAnnotation(annotation)
+
+            if !viewContains(annotation) {
+                mapView.addAnnotation(annotation)
+            }
         }
     }
 
@@ -152,10 +155,23 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
         }
     }
 
-    //MARK: - Weather Manager Delegate
+    // MARK: - Weather Manager Delegate
 
     func weatherDataDidUpdate(_: WeatherManager, weather: WeatherModel) {
         guard let annotation = forecastPinManager.createForecastAnnotation(for: weather) else { return }
-        mapView.addAnnotation(annotation)
+
+        if !viewContains(annotation) {
+            mapView.addAnnotation(annotation)
+        }
+    }
+
+    private func viewContains(_ pin: ForecastPin) -> Bool {
+        return mapView.annotations.contains(where: { place in place.title == pin.title })
+    }
+
+    //MARK: - Initialize Notifications
+
+    func initializeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(dismissView), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
 }

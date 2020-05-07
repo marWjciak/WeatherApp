@@ -24,15 +24,15 @@ class LocationWeatherCell: SwipeTableViewCell {
         super.setSelected(selected, animated: animated)
     }
 
-    func configureFor(_ weatherdata: WeatherModel!, andDelegate delegate: SwipeTableViewCellDelegate) {
+    func configureFor(_ weatherData: WeatherModel?, andDelegate delegate: SwipeTableViewCellDelegate) {
         self.delegate = delegate
 
-        if !weatherdata.dayForecasts.isEmpty {
-            weatherImage.image = UIImage(systemName: weatherdata.dayForecasts[0].icon)
-            currentTemp.text = String(weatherdata.dayForecasts[0].temp)
-            cityName.text = weatherdata.cityName
-            weatherDescription.text = weatherdata.dayForecasts[0].description
-            isFromLocationImage.isHidden = !weatherdata.fromLocation
+        if let safeWeatherData = weatherData, !safeWeatherData.dayForecasts.isEmpty {
+            weatherImage.image = UIImage(systemName: safeWeatherData.dayForecasts[0].icon)
+            currentTemp.text = String(safeWeatherData.dayForecasts[0].temp)
+            cityName.text = safeWeatherData.cityName
+            weatherDescription.text = safeWeatherData.dayForecasts[0].description
+            isFromLocationImage.isHidden = !safeWeatherData.fromLocation
         }
     }
 }

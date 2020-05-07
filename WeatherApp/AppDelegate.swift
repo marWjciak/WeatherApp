@@ -13,7 +13,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        Locations.shared.weatherManager = WeatherManager()
+        WeatherData.shared.weatherManager = WeatherManager()
 
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = false
