@@ -111,7 +111,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }) else { return }
 
             if !locationNameString.isEmpty {
-                self.weatherManager.fetchWeatherData(for: locationNameString)
+                self.weatherManager.fetchWeatherData(for: [locationNameString])
             }
         }
 
@@ -376,8 +376,8 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
 
     private func fetchUserData() {
-        for location in userLocations {
-            weatherManager.fetchWeatherData(for: location)
+        if !userLocations.isEmpty {
+            weatherManager.fetchWeatherData(for: userLocations)
         }
     }
 
@@ -405,9 +405,11 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
             if NetworkStatusController.shared.isConnected {
                 DispatchQueue.main.async {
-                    self.navigationItem.titleView = nil
+                    if self.navigationItem.titleView != nil {
+                        self.navigationItem.titleView = nil
+                        self.loadAllData()
+                    }
                 }
-                self.loadAllData()
             } else {
                 DispatchQueue.main.async {
                     let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
@@ -432,10 +434,10 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     func newLocationDidAdd(_: ForecastPinManager, with coords: CLLocationCoordinate2D) {
         let lat = String(coords.latitude)
         let lon = String(coords.longitude)
-        weatherManager.fetchWeatherData(latitude: lat, longitude: lon, fromLocation: false)
+        weatherManager.fetchWeatherData(latitude: lat, longitude: lon)
     }
 
-    //MARK: - Initialize Notifications
+    // MARK: - Initialize Notifications
 
     func initializeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(loadAllData), name: UIApplication.willEnterForegroundNotification, object: nil)

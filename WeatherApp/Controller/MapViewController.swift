@@ -69,7 +69,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, WeatherManagerDele
         let point = longGesture.location(in: mapView)
         let pointCoords = mapView.convert(point, toCoordinateFrom: mapView)
 
-        weatherManager.fetchWeatherData(latitude: String(pointCoords.latitude), longitude: String(pointCoords.longitude), fromLocation: false)
+        weatherManager.fetchWeatherData(latitude: String(pointCoords.latitude), longitude: String(pointCoords.longitude))
     }
 
     @objc private func dismissView() {
