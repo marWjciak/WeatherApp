@@ -24,7 +24,8 @@ extension WeatherManagerDelegate {
 let rawURL = "https://api.openweathermap.org/data/2.5/forecast?appid=ae70447edd3ebdbaca972a829ab5765c&units=metric" //&lang=pl"
 class WeatherManager {
     var delegates = MulticastDelegate<WeatherManagerDelegate>()
-    
+
+    // change to send locations in array and send async request for all locations
     func fetchWeatherData(for city: String) {
         let cityNameForRequest = prepareNameToRequest(for: city)
         
