@@ -228,9 +228,11 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if weatherData[indexPath.row].dayForecasts.isEmpty {
+            tableView.separatorStyle = .none
             return 0
         }
 
+        tableView.separatorStyle = .singleLine
         return tableView.bounds.size.height / 5
     }
 
