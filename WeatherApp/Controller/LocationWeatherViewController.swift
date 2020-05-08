@@ -111,7 +111,7 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
             }) else { return }
 
             if !locationNameString.isEmpty {
-                self.weatherManager.fetchWeatherData(for: locationNameString)
+                self.weatherManager.fetchWeatherData(for: [locationNameString])
             }
         }
 
@@ -179,15 +179,12 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
 
     func weatherDataDidRemove(_: WeatherManager, location: String) {
-        print("\(location) removed")
-
         let indexToRemove = weatherData.firstIndex { data -> Bool in
             data.cityName == location
         }
 
-        if let index = indexToRemove {
-            removeSelectedCell(weatherData[index], index)
-        }
+        guard let index = indexToRemove else { return }
+        removeSelectedCell(weatherData[index], index)
 
         tableView.reloadData()
     }
@@ -231,9 +228,11 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if weatherData[indexPath.row].dayForecasts.isEmpty {
+            tableView.separatorStyle = .none
             return 0
         }
 
+        tableView.separatorStyle = .singleLine
         return tableView.bounds.size.height / 5
     }
 
@@ -376,8 +375,8 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
 
     private func fetchUserData() {
-        for location in userLocations {
-            weatherManager.fetchWeatherData(for: location)
+        if !userLocations.isEmpty {
+            weatherManager.fetchWeatherData(for: userLocations)
         }
     }
 
@@ -405,9 +404,11 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
 
             if NetworkStatusController.shared.isConnected {
                 DispatchQueue.main.async {
-                    self.navigationItem.titleView = nil
+                    if self.navigationItem.titleView != nil {
+                        self.navigationItem.titleView = nil
+                        self.loadAllData()
+                    }
                 }
-                self.loadAllData()
             } else {
                 DispatchQueue.main.async {
                     let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
@@ -432,10 +433,10 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     func newLocationDidAdd(_: ForecastPinManager, with coords: CLLocationCoordinate2D) {
         let lat = String(coords.latitude)
         let lon = String(coords.longitude)
-        weatherManager.fetchWeatherData(latitude: lat, longitude: lon, fromLocation: false)
+        weatherManager.fetchWeatherData(latitude: lat, longitude: lon)
     }
 
-    //MARK: - Initialize Notifications
+    // MARK: - Initialize Notifications
 
     func initializeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(loadAllData), name: UIApplication.willEnterForegroundNotification, object: nil)

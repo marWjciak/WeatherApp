@@ -14,7 +14,6 @@ class LoadingIndicator {
     fileprivate static var style: UIActivityIndicatorView.Style = .large
     fileprivate static var backgroundColor = UIColor(named: K.Assets.upperColor)?.withAlphaComponent(0.4)
     fileprivate static var color = K.color
-
     fileprivate static var tempView: UIView?
 
     static var isRunning: Bool {
