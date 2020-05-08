@@ -53,7 +53,7 @@ class WeatherManager {
     }
     
     private func performWeatherRequest(with url: String, fromLocation: Bool, latitude: Double, longitude: Double) {
-        Alamofire.request(url).response { responseData in
+        AF.request(url).response { responseData in
             
             if let weatherData = responseData.data {
                 let responseModel = WeatherResponse(data: weatherData, fromLocation: fromLocation)
