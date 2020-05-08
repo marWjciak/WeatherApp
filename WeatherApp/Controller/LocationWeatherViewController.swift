@@ -179,15 +179,12 @@ class LocationWeatherViewController: UITableViewController, CLLocationManagerDel
     }
 
     func weatherDataDidRemove(_: WeatherManager, location: String) {
-        print("\(location) removed")
-
         let indexToRemove = weatherData.firstIndex { data -> Bool in
             data.cityName == location
         }
 
-        if let index = indexToRemove {
-            removeSelectedCell(weatherData[index], index)
-        }
+        guard let index = indexToRemove else { return }
+        removeSelectedCell(weatherData[index], index)
 
         tableView.reloadData()
     }
